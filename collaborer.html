@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJ VIZION — Collaborer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & ROOT ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:        #070A09;
+  --bg2:       #0D1410;
+  --bg-purple: #0F0A1E;
+  --bg-green:  #0A1610;
+  --violet:    #9660E8;
+  --violet-lo: rgba(150,96,232,.18);
+  --violet-mid:rgba(150,96,232,.35);
+  --green:     #4A8A5C;
+  --green-lo:  rgba(74,138,92,.18);
+  --ochre:     #C8960A;
+  --ochre-lo:  rgba(200,150,10,.12);
+  --cu-violet: #CF35DC;
+  --cu-vlo:    rgba(207,53,220,.13);
+  --cu-or:     #D4A008;
+  --cu-orlo:   rgba(212,160,8,.10);
+  --light:     #EDE6DA;
+  --muted:     rgba(237,230,218,.45);
+  --border:    rgba(237,230,218,.07);
+  --border-v:  rgba(150,96,232,.25);
+  --border-g:  rgba(74,138,92,.25);
+}
+
+body {
+  background: var(--bg);
+  color: var(--light);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN ── */
+body::after {
+  content: ''; position: fixed; inset: 0;
+  pointer-events: none; z-index: 999; opacity: .032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 220px;
+}
+
+/* ── SCAN-LINES ── */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  pointer-events: none; z-index: 997;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0px, transparent 3px,
+    rgba(150,96,232,.018) 3px, rgba(150,96,232,.018) 4px
+  );
+}
+
+/* ── LANG ── */
+.fr, .en, .nl { display: none; }
+body.lang-fr .fr { display: inline; }
+body.lang-en .en { display: inline; }
+body.lang-nl .nl { display: inline; }
+body.lang-fr .fr.block, body.lang-en .en.block, body.lang-nl .nl.block { display: block; }
+
+/* ─────────────────────────────────── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  padding: .8rem 2.8rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(7,10,9,.97);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo img { height: 68px; width: auto; display: block; }
+.nav-center { display: flex; align-items: center; gap: 2rem; }
+.nav-center a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.nav-center a:hover, .nav-center a.active { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 1.2rem; }
+.lang-switch { display: flex; gap: .3rem; }
+.lang-switch button {
+  background: none; border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .25rem .4rem; transition: color .2s;
+}
+.lang-switch button:hover, .lang-switch button.active { color: var(--violet); }
+.nav-booking {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--bg); background: var(--violet);
+  text-decoration: none; padding: .5rem 1.2rem; transition: background .2s;
+}
+.nav-booking:hover { background: #b07ef0; }
+
+/* ── HAMBURGER ── */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: .4rem;
+}
+.hamburger span {
+  display: block; width: 24px; height: 1.5px;
+  background: var(--light); transition: transform .3s, opacity .3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 190;
+  background: rgba(7,10,9,.97);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem; transform: translateX(100%);
+  transition: transform .4s cubic-bezier(.77,0,.175,1);
+}
+.mobile-menu.open { transform: translateX(0); }
+.mobile-menu a {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem,8vw,3rem); font-weight: 700;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; letter-spacing: .05em; transition: color .2s;
+}
+.mobile-menu a:hover { color: var(--violet); }
+.mobile-menu .mobile-booking {
+  font-size: 1rem; color: var(--bg); background: var(--violet);
+  padding: .7rem 2.2rem; letter-spacing: .1em;
+}
+.mobile-lang { display: flex; gap: 1.2rem; margin-top: 1rem; }
+.mobile-lang button {
+  background: none; border: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .4rem .9rem; transition: all .2s;
+}
+.mobile-lang button:hover, .mobile-lang button.active { color: var(--violet); border-color: var(--border-v); }
+
+/* ─────────────────────────────── PAGE HEADER ─── */
+.page-header {
+  padding: 9rem 3rem 4rem;
+  position: relative; overflow: hidden;
+  opacity: 0; animation: fadeUp .7s .2s forwards;
+}
+.page-header::before {
+  content: '';
+  position: absolute; top: -60px; left: -80px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(74,138,92,.13) 0%, transparent 65%);
+  pointer-events: none;
+}
+.page-header::after {
+  content: '';
+  position: absolute; bottom: -80px; right: -60px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(100,40,180,.16) 0%, transparent 65%);
+  pointer-events: none;
+}
+.page-num-bg {
+  position: absolute; bottom: -1rem; right: -.05em;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(8rem, 22vw, 18rem);
+  line-height: 1; opacity: .025; color: var(--light);
+  pointer-events: none; user-select: none; z-index: 0;
+  letter-spacing: -.04em;
+}
+.header-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 1.2rem; position: relative; z-index: 2;
+}
+.page-header h1 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(4rem, 13vw, 12rem);
+  text-transform: uppercase; line-height: .85; letter-spacing: -.04em;
+  position: relative; z-index: 2;
+}
+.page-header h1 .accent { color: var(--violet); }
+.page-header-sub {
+  font-family: 'DM Sans', sans-serif; font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: var(--muted); line-height: 1.6;
+  margin-top: 2rem; max-width: 600px; position: relative; z-index: 2;
+}
+
+/* ─────────────────────────────── DIVIDER ─── */
+.divider {
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%, var(--border-v) 30%,
+    var(--border-g) 70%, transparent 100%);
+  opacity: .5;
+}
+
+/* ─────────────────────────────── INTRO ─── */
+.intro-section {
+  padding: 6rem 3rem; max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start;
+  position: relative;
+}
+.intro-section .sec-bloom {
+  position: absolute; top: -60px; right: -60px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(150,96,232,.06) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.intro-lead {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  line-height: 1.45; color: var(--light);
+  position: relative; z-index: 2;
+}
+.intro-lead strong { color: var(--violet); font-weight: 700; }
+.intro-right { position: relative; z-index: 2; }
+.intro-right p {
+  font-size: 1rem; line-height: 1.9;
+  color: rgba(237,230,218,.62); margin-bottom: 1.6rem;
+}
+.intro-right p:last-child { margin-bottom: 0; }
+.intro-right strong { color: var(--light); font-weight: 500; }
+
+/* ─────────────────────────────── SECTIONS PROJETS ─── */
+.projet-section {
+  border-top: 1px solid; border-bottom: 1px solid;
+  position: relative; overflow: hidden;
+}
+.projet-section.cu {
+  background: #0A070F;
+  border-color: rgba(207,53,220,.2);
+}
+.projet-section.mika {
+  background: #110E04;
+  border-color: rgba(200,150,10,.2);
+}
+
+.projet-inner {
+  max-width: 1200px; margin: 0 auto; padding: 5rem 3rem;
+  position: relative; z-index: 2;
+}
+
+/* Bloom par projet */
+.projet-section.cu .proj-bloom {
+  position: absolute; top: -80px; right: -80px; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(207,53,220,.08) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.projet-section.mika .proj-bloom {
+  position: absolute; bottom: -80px; left: -80px; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(200,150,10,.07) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+
+/* Numéro décoratif par section */
+.sec-num-bg {
+  position: absolute; top: -.1em; right: -.05em;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(7rem, 18vw, 15rem);
+  line-height: 1; opacity: .025; color: var(--light);
+  pointer-events: none; user-select: none; z-index: 0; letter-spacing: -.04em;
+}
+
+/* Eyebrows */
+.proj-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .28em; text-transform: uppercase;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: .8rem;
+}
+.proj-eyebrow::after { content: ''; width: 35px; height: 1px; background: currentColor; opacity: .35; }
+.proj-eyebrow.cu  { color: var(--cu-violet); }
+.proj-eyebrow.mika { color: var(--ochre); }
+
+/* Titres */
+.proj-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  text-transform: uppercase; letter-spacing: -.02em; line-height: 1;
+  color: var(--light); margin-bottom: 1.8rem;
+}
+.proj-title .accent-cu   { color: var(--cu-violet); }
+.proj-title .accent-mika { color: var(--ochre); }
+
+/* Desc */
+.proj-desc {
+  font-size: 1.02rem; line-height: 1.9;
+  color: rgba(237,230,218,.62); max-width: 780px; margin-bottom: 1.5rem;
+}
+.proj-desc strong { color: var(--light); font-weight: 500; }
+
+/* Lien */
+.proj-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  text-decoration: none; border-bottom: 1px solid;
+  padding-bottom: 2px; display: inline-block; margin-bottom: 3rem;
+  transition: opacity .2s;
+}
+.proj-link.cu   { color: var(--cu-violet); border-color: rgba(207,53,220,.35); }
+.proj-link.mika { color: var(--ochre);     border-color: rgba(200,150,10,.35); }
+.proj-link:hover { opacity: .7; }
+
+/* ── BANDEAU IMAGE ── */
+.bandeau {
+  width: calc(100% + 6rem); margin-left: -3rem; margin-bottom: 3.5rem;
+  position: relative; overflow: hidden; height: 420px;
+}
+.bandeau img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center top;
+  display: block; filter: saturate(.88) brightness(.92);
+  transition: transform .8s ease;
+}
+.bandeau:hover img { transform: scale(1.02); }
+.bandeau.cu::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: rgba(30,10,40,.3); mix-blend-mode: multiply; pointer-events: none;
+}
+.bandeau.cu::after {
+  content: ''; position: absolute; inset: 0; z-index: 2;
+  background:
+    linear-gradient(to bottom, #0A070F 0%, transparent 18%, transparent 82%, #0A070F 100%),
+    linear-gradient(to right, rgba(10,7,15,.7) 0%, transparent 20%, transparent 80%, rgba(10,7,15,.7) 100%);
+  pointer-events: none;
+}
+.bandeau.mika::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: rgba(40,30,5,.3); mix-blend-mode: multiply; pointer-events: none;
+}
+.bandeau { }
+.bandeau.mika::after {
+  content: ''; position: absolute; inset: 0; z-index: 2;
+  background:
+    linear-gradient(to bottom, #110E04 0%, transparent 18%, transparent 82%, #110E04 100%),
+    linear-gradient(to right, rgba(17,14,4,.7) 0%, transparent 20%, transparent 80%, rgba(17,14,4,.7) 100%);
+  pointer-events: none;
+}
+
+/* ── GRID PROFILS ── */
+.profils-grid {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem;
+}
+
+/* CHAOS UNIT cards */
+.profil-card.cu {
+  border: 1px solid rgba(207,53,220,.22);
+  background: rgba(15,5,20,.5);
+  padding: 2.2rem 2rem; position: relative; overflow: hidden;
+  transition: border-color .3s, background .3s;
+}
+.profil-card.cu::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0;
+  background: var(--cu-violet); transition: height .4s ease;
+}
+.profil-card.cu:hover { border-color: rgba(207,53,220,.5); background: rgba(15,5,20,.8); }
+.profil-card.cu:hover::before { height: 100%; }
+.profil-card.cu .profil-num { color: var(--cu-violet); opacity: .12; }
+
+/* MIKA card */
+.profil-card.mika {
+  border: 1px solid rgba(200,150,10,.22);
+  background: rgba(20,15,4,.5);
+  padding: 2.2rem 2rem; position: relative; overflow: hidden;
+  transition: border-color .3s, background .3s;
+}
+.profil-card.mika::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0;
+  background: var(--ochre); transition: height .4s ease;
+}
+.profil-card.mika:hover { border-color: rgba(200,150,10,.5); background: rgba(20,15,4,.8); }
+.profil-card.mika:hover::before { height: 100%; }
+.profil-card.mika .profil-num { color: var(--ochre); opacity: .12; }
+
+.profil-num {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 3rem; line-height: 1; margin-bottom: .5rem;
+}
+.profil-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 1.05rem; letter-spacing: .02em; text-transform: uppercase;
+  color: var(--light); margin-bottom: .9rem;
+}
+.profil-desc { font-size: .92rem; line-height: 1.85; color: rgba(237,230,218,.55); }
+.profil-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.2rem; }
+.ptag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+  padding: .25rem .75rem;
+}
+.ptag.cu   { color: var(--cu-violet); border: 1px solid rgba(207,53,220,.28); }
+.ptag.mika { color: var(--ochre);     border: 1px solid rgba(200,150,10,.28); }
+
+/* ── PROFIL MIKA WIDE — pleine largeur ── */
+.profil-card-wide {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 2fr; gap: 2.5rem; align-items: start;
+}
+
+/* ─────────────────────────────── FORM SECTION ─── */
+.form-section {
+  max-width: 1200px; margin: 0 auto;
+  padding: 6rem 3rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start;
+  position: relative;
+}
+.form-section .sec-bloom {
+  position: absolute; top: -60px; left: -60px; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(150,96,232,.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+.form-left { position: relative; z-index: 2; }
+.form-left .form-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .25em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: .8rem;
+}
+.form-left .form-eyebrow::after { content: ''; width: 40px; height: 1px; background: var(--border); }
+.form-left h2 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  text-transform: uppercase; letter-spacing: -.02em; line-height: 1.05;
+  color: var(--light); margin-bottom: 1.5rem;
+}
+.form-left h2 .accent { color: var(--violet); }
+.form-left p {
+  font-size: 1rem; line-height: 1.9;
+  color: rgba(237,230,218,.62); margin-bottom: 1.5rem;
+}
+.micro-deco {
+  width: 320px; opacity: .35; margin-top: 2.5rem;
+  filter: drop-shadow(0 0 32px rgba(150,96,232,.45))
+          drop-shadow(0 0 12px rgba(150,96,232,.25));
+}
+.form-wrap {
+  background: var(--bg2); border: 1px solid var(--border-v);
+  padding: 2.5rem; position: relative; z-index: 2;
+}
+.form-group { margin-bottom: 1.5rem; }
+.form-group:last-of-type { margin-bottom: 0; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--violet); display: block; margin-bottom: .55rem;
+}
+.form-input, .form-textarea, .form-select {
+  width: 100%; background: rgba(150,96,232,.04);
+  border: 1px solid var(--border-v);
+  color: var(--light); font-family: 'DM Sans', sans-serif;
+  font-size: .95rem; font-weight: 300; padding: .9rem 1.1rem;
+  outline: none; transition: border-color .2s, background .2s; appearance: none;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color: rgba(150,96,232,.55); background: rgba(150,96,232,.07);
+}
+.form-textarea { min-height: 130px; resize: vertical; }
+.form-select option { background: #0d1014; }
+.btn-submit {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--bg); background: var(--violet);
+  border: none; cursor: pointer; padding: 1.1rem 2.5rem;
+  margin-top: 1.8rem; display: inline-block; width: 100%;
+  transition: background .2s, transform .15s;
+}
+.btn-submit:hover { background: #b07ef0; transform: translateY(-2px); }
+
+/* ─────────────────────────────── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: var(--bg);
+}
+footer img { height: 32px; width: auto; opacity: .45; }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.footer-links a:hover { color: var(--violet); }
+.footer-copy { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .12em; color: var(--muted); }
+
+/* ─────────────────────────────── ANIMATIONS ─── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:.12s; }
+.reveal-delay-2 { transition-delay:.24s; }
+.reveal-delay-3 { transition-delay:.36s; }
+.reveal-delay-4 { transition-delay:.48s; }
+
+/* ─────────────────────────────── RESPONSIVE ─── */
+@media (max-width: 960px) {
+  .nav-center { display: none; }
+  .hamburger  { display: flex; }
+  .nav-booking { display: none; }
+}
+@media (max-width: 900px) {
+  .intro-section { grid-template-columns: 1fr; gap: 2.5rem; }
+  .profils-grid { grid-template-columns: 1fr; }
+  .profil-card-wide { grid-template-columns: 1fr; }
+  .form-section { grid-template-columns: 1fr; gap: 3rem; }
+  .micro-deco { display: none; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .page-header { padding: 8rem 1.5rem 3rem; }
+  .intro-section { padding: 4rem 1.5rem; }
+  .projet-inner { padding: 3.5rem 1.5rem; }
+  .bandeau { width: calc(100% + 3rem); margin-left: -1.5rem; height: 220px; }
+  .form-section { padding: 4rem 1.5rem; }
+  .form-row { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+<body class="lang-fr">
+
+<!-- ─── MOBILE MENU ─── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">
+    <span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span>
+  </a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="projets.html" onclick="closeMenu()">
+    <span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span>
+  </a>
+  <a href="collaborer.html" onclick="closeMenu()">
+    <span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span>
+  </a>
+  <a href="booking.html" class="mobile-booking" onclick="closeMenu()">Booking</a>
+  <div class="mobile-lang">
+    <button onclick="setLang('fr',this)">FR</button>
+    <button onclick="setLang('en',this)">EN</button>
+    <button onclick="setLang('nl',this)">NL</button>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo_dj_vizion.webp" alt="DJ VIZION">
+  </a>
+  <div class="nav-center">
+    <a href="index.html"><span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span></a>
+    <a href="about.html">About</a>
+    <a href="projets.html"><span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span></a>
+    <a href="collaborer.html" class="active"><span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span></a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button onclick="setLang('fr',this)" class="active">FR</button>
+      <button onclick="setLang('en',this)">EN</button>
+      <button onclick="setLang('nl',this)">NL</button>
+    </div>
+    <a href="booking.html" class="nav-booking">Booking</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── PAGE HEADER ─── -->
+<div class="page-header">
+  <div class="page-num-bg">C</div>
+  <div class="header-eyebrow">// DJ VIZION</div>
+  <h1>
+    <span class="fr">Colla<span class="accent">borer</span></span>
+    <span class="en">Colla<span class="accent">borate</span></span>
+    <span class="nl">Samen<span class="accent">werken</span></span>
+  </h1>
+  <p class="page-header-sub">
+    <span class="fr">Une vision, une direction, un espace pour ce que vous avez de plus singulier.</span>
+    <span class="en">A vision, a direction, a space for what makes you singular.</span>
+    <span class="nl">Een visie, een richting, een ruimte voor wat jou uniek maakt.</span>
+  </p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ─── INTRO ─── -->
+<div class="intro-section">
+  <div class="sec-bloom"></div>
+  <div class="reveal">
+    <p class="intro-lead">
+      <span class="fr">DJ VIZION ne cherche pas des interprètes —<br>il cherche des <strong>visions</strong>.</span>
+      <span class="en">DJ VIZION doesn't look for performers —<br>he looks for <strong>visions</strong>.</span>
+      <span class="nl">DJ VIZION zoekt geen uitvoerders —<br>hij zoekt <strong>visies</strong>.</span>
+    </p>
+  </div>
+  <div class="intro-right reveal reveal-delay-1">
+    <p>
+      <span class="fr">Chaque projet part d'un cadre sonore défini : afro-futuriste, construit en crescendo, pensé pour la scène. Ce cadre n'est pas une contrainte — c'est une direction. L'artiste qui s'y intègre y trouve un espace pour exprimer ce qu'il a de plus singulier.</span>
+      <span class="en">Every project starts from a defined sonic framework: afro-futurist, built in crescendo, designed for the stage. This framework isn't a constraint — it's a direction. The artist who joins it finds space to express what makes them singular.</span>
+      <span class="nl">Elk project vertrekt vanuit een gedefinieerd sonisch kader: afro-futuristisch, opgebouwd in crescendo, ontworpen voor het podium. Dit kader is geen beperking — het is een richting.</span>
+    </p>
+    <p>
+      <span class="fr">Confirmé ou émergent, peu importe. Ce qui compte : une identité forte, une présence scénique, et l'envie de construire quelque chose qui dépasse le concert. Sur scène, DJ VIZION opère en <strong>sets hybrides live/effets</strong> — il ne lance pas des morceaux, il transforme et reconstruit le son en direct.</span>
+      <span class="en">Established or emerging, it doesn't matter. What counts: a strong identity, stage presence, and the desire to build something beyond the concert. On stage, DJ VIZION operates in <strong>hybrid live/effects sets</strong> — he doesn't play tracks, he transforms and reconstructs the sound live.</span>
+      <span class="nl">Gevestigd of opkomend, het maakt niet uit. Wat telt: een sterke identiteit, podiumaanwezigheid en de wil om iets te bouwen dat verder gaat dan het concert. DJ VIZION werkt met <strong>hybride live/effecten sets</strong>.</span>
+    </p>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ─── CHAOS UNIT ─── -->
+<section class="projet-section cu">
+  <div class="proj-bloom"></div>
+  <div class="sec-num-bg">01</div>
+  <div class="projet-inner">
+
+    <div class="proj-eyebrow cu reveal">
+      <span class="fr">Casting ouvert</span>
+      <span class="en">Open casting</span>
+      <span class="nl">Open casting</span>
+    </div>
+
+    <h2 class="proj-title reveal">
+      <span class="accent-cu">CHAOS</span> UNIT
+    </h2>
+
+    <p class="proj-desc reveal">
+      <span class="fr">Ragga, Afrobeat &amp; Power Soca caribéen × <strong>melodic techno et afro house</strong> : nappes organiques et basses profondes qui dialoguent avec les rythmes afro-caribéens. DJ VIZION en <strong>sets hybrides live/effets</strong>. Production : 14 titres instrumentaux produits par <strong>Ralph Van Lierde</strong>, Anvers. CHAOS UNIT recrute ses MCs et son Escouade de danseurs-animateurs.</span>
+      <span class="en">Ragga, Afrobeat &amp; Caribbean Power Soca × <strong>melodic techno and afro house</strong>: organic layers and deep bass. DJ VIZION delivering <strong>hybrid live/effects sets</strong>. Production: 14 instrumental tracks by <strong>Ralph Van Lierde</strong>, Antwerp. CHAOS UNIT is recruiting its MCs and dancer-performers.</span>
+      <span class="nl">Ragga, Afrobeat &amp; Caribische Power Soca × <strong>melodic techno en afro house</strong>: organische lagen en diepe bas. 14 instrumentale tracks door <strong>Ralph Van Lierde</strong>, Antwerpen. CHAOS UNIT werft zijn MCs en danser-animateurs.</span>
+    </p>
+
+    <a href="chaos-unit.html" class="proj-link cu reveal">
+      <span class="fr">Découvrir le projet →</span>
+      <span class="en">Discover the project →</span>
+      <span class="nl">Ontdek het project →</span>
+    </a>
+
+    <div class="bandeau cu reveal">
+      <img src="images/Naissance_d_un_collectif.webp" alt="CHAOS UNIT — Naissance d'un collectif">
+    </div>
+
+    <div class="profils-grid">
+      <div class="profil-card cu reveal reveal-delay-1">
+        <div class="profil-num">01</div>
+        <div class="profil-title">
+          <span class="fr">L'Impact — Power MC</span>
+          <span class="en">The Impact — Power MC</span>
+          <span class="nl">De Impact — Power MC</span>
+        </div>
+        <p class="profil-desc">
+          <span class="fr">L'aboyeur. Voix perforante, capable de porter la fureur d'une foule. Discipline scénique absolue. Univers Soca, Ragga ou hybride assumé. L'esthétique radicale de CHAOS UNIT n'est pas négociable.</span>
+          <span class="en">The barker. Piercing voice, able to carry crowd fury. Absolute stage discipline. Soca, Ragga or hybrid approach. CHAOS UNIT's radical aesthetic is non-negotiable.</span>
+          <span class="nl">De schreeuwer. Doordringende stem, de woede van een menigte dragen. Absolute podiumdiscipline. Radicale esthetiek is niet onderhandelbaar.</span>
+        </p>
+        <div class="profil-tags">
+          <span class="ptag cu">MC</span>
+          <span class="ptag cu">Power</span>
+          <span class="ptag cu">Soca</span>
+          <span class="ptag cu">Ragga</span>
+        </div>
+      </div>
+
+      <div class="profil-card cu reveal reveal-delay-2">
+        <div class="profil-num">02</div>
+        <div class="profil-title">
+          <span class="fr">La Précision — Fast Flow MC</span>
+          <span class="en">The Precision — Fast Flow MC</span>
+          <span class="nl">De Precisie — Fast Flow MC</span>
+        </div>
+        <p class="profil-desc">
+          <span class="fr">L'expert technique. Flows millimétrés insérés comme des pièces mécaniques dans la rythmique électronique. Maîtrise du timing industriel.</span>
+          <span class="en">The technical expert. Precise flows inserted like mechanical parts into the electronic rhythm. Mastery of industrial timing.</span>
+          <span class="nl">De technische expert. Precieze flows ingevoegd als mechanische onderdelen in het elektronische ritme.</span>
+        </p>
+        <div class="profil-tags">
+          <span class="ptag cu">MC</span>
+          <span class="ptag cu">Fast Flow</span>
+          <span class="ptag cu">Melodic Techno</span>
+        </div>
+      </div>
+
+      <div class="profil-card cu reveal reveal-delay-3">
+        <div class="profil-num">03</div>
+        <div class="profil-title">
+          <span class="fr">La Profondeur — Mystic MC</span>
+          <span class="en">The Depth — Mystic MC</span>
+          <span class="nl">De Diepte — Mystic MC</span>
+        </div>
+        <p class="profil-desc">
+          <span class="fr">L'ancrage sombre. Résonance Dub et dimension sacrée. Une voix qui installe le silence avant le chaos. Présence enracinée et magnétique.</span>
+          <span class="en">The dark anchor. Dub resonance and sacred dimension. A voice that installs silence before chaos. Rooted and magnetic presence.</span>
+          <span class="nl">Het donkere anker. Dub-resonantie en heilige dimensie. Gewortelde en magnetische aanwezigheid.</span>
+        </p>
+        <div class="profil-tags">
+          <span class="ptag cu">MC</span>
+          <span class="ptag cu">Dub</span>
+          <span class="ptag cu">Mystic</span>
+        </div>
+      </div>
+
+      <div class="profil-card cu reveal reveal-delay-4">
+        <div class="profil-num">04</div>
+        <div class="profil-title">
+          <span class="fr">L'Escouade — Meneuses de Transe</span>
+          <span class="en">The Squad — Trance Leaders</span>
+          <span class="nl">De Escouade — Transe-aanvoersters</span>
+        </div>
+        <p class="profil-desc">
+          <span class="fr">2 à 4 danseuses-animatrices. Look Cyber-Caribéen. Maîtrise du contraste : mouvements robotiques (Melodic Techno) et activation sauvage de la foule (Soca).</span>
+          <span class="en">2 to 4 dancer-animators. Cyber-Caribbean look. Command of contrast: robotic movement (Melodic Techno) and wild crowd activation (Soca).</span>
+          <span class="nl">2 tot 4 danseressen-animatrices. Cyber-Caribisch uiterlijk. Robotachtige bewegingen en wilde publieksactivering.</span>
+        </p>
+        <div class="profil-tags">
+          <span class="ptag cu">Danse</span>
+          <span class="ptag cu">Cyber-Caribéen</span>
+          <span class="ptag cu">Soca</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── SISTA MIKA ─── -->
+<section class="projet-section mika">
+  <div class="proj-bloom"></div>
+  <div class="sec-num-bg">02</div>
+  <div class="projet-inner">
+
+    <div class="proj-eyebrow mika reveal">
+      <span class="fr">Choriste remplaçante recherchée</span>
+      <span class="en">Replacement backing vocalist wanted</span>
+      <span class="nl">Vervangend koorlid gezocht</span>
+    </div>
+
+    <h2 class="proj-title reveal">
+      Sista <span class="accent-mika">MIKA</span><br>&amp; DJ VIZION
+    </h2>
+
+    <p class="proj-desc reveal">
+      <span class="fr">The Live Experience est un show reggae live porté par <strong>Sista MIKA &amp; DJ VIZION</strong> — Sista MIKA, pionnière du reggae belge reconnue en Jamaïque, et DJ VIZION en sets hybrides live/effets — accompagnés de deux choristes-animatrices. Nous recherchons une <strong>choriste remplaçante</strong> capable d'intégrer ponctuellement le groupe, d'apprendre le set et d'intervenir en remplacement. Profil ouvert, esprit reggae bienvenu.</span>
+      <span class="en">The Live Experience is a live reggae show led by <strong>Sista MIKA &amp; DJ VIZION</strong> — Sista MIKA, Belgian reggae pioneer recognised in Jamaica, and DJ VIZION on hybrid live/effects sets — joined by two backing vocalist-performers. We are looking for a <strong>replacement backing vocalist</strong> able to join the group punctually, learn the set and step in when needed. Open profile, reggae spirit welcome.</span>
+      <span class="nl">The Live Experience is een live reggaeshow gedragen door <strong>Sista MIKA &amp; DJ VIZION</strong> — Sista MIKA, Belgische reggaepionier erkend in Jamaica, en DJ VIZION op hybride live/effecten sets — samen met twee koorleden-performers. We zoeken een <strong>vervangend koorlid</strong> dat af en toe kan instappen, de set kan leren en indien nodig kan invallen. Open profiel, reggae-spirit welkom.</span>
+    </p>
+
+    <a href="the-live-experience.html" class="proj-link mika reveal">
+      <span class="fr">Découvrir le projet →</span>
+      <span class="en">Discover the project →</span>
+      <span class="nl">Ontdek het project →</span>
+    </a>
+
+    <div class="bandeau mika reveal">
+      <img src="images/The_Sista_s_SITE.webp" alt="Sista MIKA &amp; DJ VIZION — The Live Experience">
+    </div>
+
+    <div class="profils-grid">
+      <div class="profil-card mika profil-card-wide reveal">
+        <div>
+          <div class="profil-num">01</div>
+          <div class="profil-title">
+            <span class="fr">Choriste remplaçante</span>
+            <span class="en">Replacement backing vocalist</span>
+            <span class="nl">Vervangend koorlid</span>
+          </div>
+        </div>
+        <div>
+          <p class="profil-desc">
+            <span class="fr">Nous cherchons une seule personne — confirmée ou émergente — capable de s'intégrer ponctuellement au show. La mission : apprendre le set, intervenir en remplacement, tenir la scène. Idéalement à l'aise dans un rôle de performer-animatrice, mais le chant seul est également bienvenu. Aucune langue spécifique requise. Une bonne oreille musicale prime sur la connaissance du répertoire reggae — ce qui s'apprend. Ce qui ne s'apprend pas : la présence et l'engagement.</span>
+            <span class="en">We are looking for one person — established or emerging — able to join the show on a punctual basis. The mission: learn the set, step in as replacement, hold the stage. Ideally comfortable as a performer-animator too, but vocals only is equally welcome. No specific language required. A good musical ear counts more than knowledge of the reggae repertoire — that can be learned. What cannot be learned: presence and commitment.</span>
+            <span class="nl">We zoeken één persoon — gevestigd of opkomend — die af en toe in de show kan stappen. De missie: de set leren, invallen als vervanger, het podium vasthouden. Bij voorkeur ook comfortabel als performer-animator, maar enkel zang is evenzeer welkom. Geen specifieke taal vereist. Een goed muzikaal gehoor telt meer dan kennis van het reggae-repertoire — dat kan geleerd worden. Wat niet geleerd kan worden: aanwezigheid en betrokkenheid.</span>
+          </p>
+          <div class="profil-tags" style="margin-top:1.2rem;">
+            <span class="ptag mika">
+              <span class="fr">Chant</span><span class="en">Vocals</span><span class="nl">Zang</span>
+            </span>
+            <span class="ptag mika">
+              <span class="fr">Performer</span><span class="en">Performer</span><span class="nl">Performer</span>
+            </span>
+            <span class="ptag mika">Reggae</span>
+            <span class="ptag mika">
+              <span class="fr">Ponctuel</span><span class="en">Punctual</span><span class="nl">Punctueel</span>
+            </span>
+            <span class="ptag mika">
+              <span class="fr">Émergent bienvenu</span><span class="en">Emerging welcome</span><span class="nl">Opkomend welkom</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── FORMULAIRE ─── -->
+<div class="form-section">
+  <div class="sec-bloom"></div>
+  <div class="form-left reveal">
+    <div class="form-eyebrow">
+      <span class="fr">Prendre contact</span>
+      <span class="en">Get in touch</span>
+      <span class="nl">Neem contact op</span>
+    </div>
+    <h2>
+      <span class="fr">Parlons de<br><span class="accent">votre vision</span></span>
+      <span class="en">Let's talk about<br><span class="accent">your vision</span></span>
+      <span class="nl">Laten we praten over<br><span class="accent">uw visie</span></span>
+    </h2>
+    <p>
+      <span class="fr">Utilisez le formulaire pour nous envoyer vos références musicales. Nous vous répondrons dans les meilleurs délais.</span>
+      <span class="en">Use the form to send your musical references. We'll get back to you as soon as possible.</span>
+      <span class="nl">Gebruik het formulier om uw muzikale referenties te sturen. We nemen zo snel mogelijk contact met u op.</span>
+    </p>
+    <img src="images/Micro_stylise_afro-futuriste.webp" alt="" class="micro-deco" aria-hidden="true">
+  </div>
+
+  <div class="form-wrap reveal reveal-delay-1">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Nom / Prénom</span>
+          <span class="en">Name</span>
+          <span class="nl">Naam</span>
+        </label>
+        <input type="text" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Profil</span>
+          <span class="en">Profile</span>
+          <span class="nl">Profiel</span>
+        </label>
+        <select class="form-select">
+          <option value="" disabled selected>—</option>
+          <option value="mc-power">CHAOS UNIT — MC / Power</option>
+          <option value="mc-flow">CHAOS UNIT — MC / Fast Flow</option>
+          <option value="mc-mystic">CHAOS UNIT — MC / Mystic</option>
+          <option value="danse">CHAOS UNIT — <span class="fr">Danseuse-animatrice</span><span class="en">Dancer-performer</span><span class="nl">Danser-animatrice</span></option>
+          <option value="mika-choriste">Sista MIKA — <span class="fr">Choriste remplaçante</span><span class="en">Replacement vocalist</span><span class="nl">Vervangend koorlid</span></option>
+          <option value="autre"><span class="fr">Autre</span><span class="en">Other</span><span class="nl">Ander</span></option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-input">
+    </div>
+    <div class="form-group">
+      <label class="form-label">
+        <span class="fr">Références musicales (liens)</span>
+        <span class="en">Musical references (links)</span>
+        <span class="nl">Muzikale referenties (links)</span>
+      </label>
+      <input type="text" class="form-input">
+    </div>
+
+    <button type="button" class="btn-submit">
+      <span class="fr">Envoyer →</span>
+      <span class="en">Send →</span>
+      <span class="nl">Verzenden →</span>
+    </button>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <a href="index.html"><img src="images/logo_dj_vizion.webp" alt="DJ VIZION"></a>
+  <div class="footer-links">
+    <a href="projets.html">
+      <span class="fr">← Projets</span><span class="en">← Projects</span><span class="nl">← Projecten</span>
+    </a>
+    <a href="chaos-unit.html">Chaos Unit</a>
+    <a href="the-live-experience.html">Live Experience</a>
+    <a href="booking.html">Booking</a>
+  </div>
+  <span class="footer-copy">© 2025 DJ VIZION</span>
+</footer>
+
+<script>
+/* ── Lang ── */
+function setLang(lang, btn) {
+  document.body.className = 'lang-' + lang;
+  localStorage.setItem('djvizion-lang', lang);
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === lang));
+}
+const saved = localStorage.getItem('djvizion-lang');
+if (saved) {
+  document.body.className = 'lang-' + saved;
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === saved));
+}
+
+/* ── Hamburger ── */
+const menu = document.getElementById('mobileMenu');
+const burger = document.getElementById('hamburger');
+function toggleMenu() {
+  const open = menu.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMenu() {
+  menu.classList.remove('open');
+  burger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Scroll reveal ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

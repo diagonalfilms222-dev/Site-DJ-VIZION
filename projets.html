@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJ VIZION — Projets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & ROOT ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:        #070A09;
+  --bg2:       #0D1410;
+  --bg-purple: #0F0A1E;
+  --bg-green:  #0A1610;
+  --violet:    #9660E8;
+  --violet-lo: rgba(150,96,232,.18);
+  --violet-mid:rgba(150,96,232,.35);
+  --green:     #4A8A5C;
+  --green-lo:  rgba(74,138,92,.18);
+  --green-mid: rgba(74,138,92,.35);
+  --ochre:     #C8960A;
+  --ochre-lo:  rgba(200,150,10,.15);
+  --light:     #EDE6DA;
+  --muted:     rgba(237,230,218,.45);
+  --faint:     rgba(237,230,218,.12);
+  --border:    rgba(237,230,218,.07);
+  --border-v:  rgba(150,96,232,.25);
+  --border-g:  rgba(74,138,92,.25);
+}
+
+body {
+  background: var(--bg);
+  color: var(--light);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN ── */
+body::after {
+  content: ''; position: fixed; inset: 0;
+  pointer-events: none; z-index: 999; opacity: .032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 220px;
+}
+
+/* ── LANG ── */
+.fr, .en, .nl { display: none; }
+body.lang-fr .fr { display: inline; }
+body.lang-en .en { display: inline; }
+body.lang-nl .nl { display: inline; }
+
+/* ─────────────────────────────────── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  padding: .8rem 2.8rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(7,10,9,.96) 0%, transparent 100%);
+  backdrop-filter: blur(3px);
+}
+.nav-logo img { height: 68px; width: auto; display: block; }
+.nav-center { display: flex; align-items: center; gap: 2rem; }
+.nav-center a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.nav-center a:hover, .nav-center a.active { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 1.2rem; }
+.lang-switch { display: flex; gap: .3rem; }
+.lang-switch button {
+  background: none; border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .25rem .4rem; transition: color .2s;
+}
+.lang-switch button:hover, .lang-switch button.active { color: var(--violet); }
+.nav-booking {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--bg); background: var(--violet);
+  text-decoration: none; padding: .5rem 1.2rem; transition: background .2s;
+}
+.nav-booking:hover { background: #b07ef0; }
+
+/* ── HAMBURGER ── */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: .4rem;
+}
+.hamburger span {
+  display: block; width: 24px; height: 1.5px;
+  background: var(--light); transition: transform .3s, opacity .3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 190;
+  background: rgba(7,10,9,.97);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem; transform: translateX(100%);
+  transition: transform .4s cubic-bezier(.77,0,.175,1);
+}
+.mobile-menu.open { transform: translateX(0); }
+.mobile-menu a {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem,8vw,3rem); font-weight: 700;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; letter-spacing: .05em; transition: color .2s;
+}
+.mobile-menu a:hover { color: var(--violet); }
+.mobile-menu .mobile-booking {
+  font-size: 1rem; color: var(--bg); background: var(--violet);
+  padding: .7rem 2.2rem; letter-spacing: .1em;
+}
+.mobile-menu .mobile-booking:hover { background: #b07ef0; color: var(--bg); }
+.mobile-lang { display: flex; gap: 1.2rem; margin-top: 1rem; }
+.mobile-lang button {
+  background: none; border: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .4rem .9rem; transition: all .2s;
+}
+.mobile-lang button:hover, .mobile-lang button.active { color: var(--violet); border-color: var(--border-v); }
+
+/* ─────────────────────────────── PAGE HEADER ─── */
+.page-header {
+  padding: 9rem 3rem 4rem;
+  position: relative; overflow: hidden;
+  opacity: 0; animation: fadeUp .7s .2s forwards;
+}
+.page-header::before {
+  content: '';
+  position: absolute; top: -60px; right: -80px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(100,40,180,.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+.page-header::after {
+  content: '';
+  position: absolute; bottom: -60px; left: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(46,90,52,.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.header-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 1.2rem;
+  position: relative; z-index: 2;
+}
+.page-header h1 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(5rem, 16vw, 14rem);
+  text-transform: uppercase; line-height: .85; letter-spacing: -.04em;
+  position: relative; z-index: 2;
+}
+.page-header h1 .accent { color: var(--violet); }
+.page-header-sub {
+  font-family: 'DM Sans', sans-serif; font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: var(--muted); line-height: 1.6;
+  margin-top: 2rem; max-width: 580px;
+  position: relative; z-index: 2;
+}
+
+/* ─────────────────────────────── DIVIDER ─── */
+.divider {
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%, var(--border-v) 30%,
+    var(--border-g) 70%, transparent 100%);
+  opacity: .5;
+}
+
+/* ─────────────────────────────── PROJECT 1 ─── */
+.project-full {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 580px;
+  position: relative; overflow: hidden;
+}
+
+/* --- MIKA : image gauche, texte droite --- */
+.project-full-mika { background: var(--bg-purple); }
+.project-full-mika::before {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(100,40,180,.22) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.pf-img {
+  position: relative; overflow: hidden;
+}
+.pf-img img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  filter: saturate(.65) contrast(1.05) brightness(.75);
+  transition: transform .8s ease;
+}
+.project-full:hover .pf-img img { transform: scale(1.03); }
+/* Overlay violet sur l'image */
+.pf-img::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  background: rgba(60,20,120,.25);
+  mix-blend-mode: multiply; pointer-events: none;
+}
+/* Dégradé droite → transparent */
+.pf-img::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(to right, rgba(15,10,30,0) 50%, rgba(15,10,30,.85) 100%);
+  pointer-events: none;
+}
+
+.pf-text {
+  padding: 4.5rem 3.5rem;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; z-index: 2;
+}
+
+.pf-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: .5rem;
+  margin-bottom: 1.4rem;
+}
+.pf-tag-v { color: var(--violet); }
+.pf-tag-g { color: var(--green); }
+
+.pf-tag .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  animation: blink 2s infinite;
+}
+.dot-v { background: var(--violet); box-shadow: 0 0 8px rgba(150,96,232,.8); }
+.dot-g { background: var(--green);  box-shadow: 0 0 8px rgba(74,138,92,.8); }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+.pf-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  text-transform: uppercase; letter-spacing: -.02em; line-height: .92;
+  color: var(--light); margin-bottom: .6rem;
+}
+.pf-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 2rem;
+}
+.pf-desc {
+  font-size: 1rem; line-height: 1.85;
+  color: rgba(237,230,218,.62); margin-bottom: 2.2rem;
+  max-width: 460px;
+}
+.pf-desc strong { color: var(--light); font-weight: 400; }
+
+.pf-meta {
+  display: flex; gap: 2rem; flex-wrap: wrap; margin-bottom: 2.5rem;
+  padding-top: 1.5rem; border-top: 1px solid var(--border);
+}
+.pf-meta-item { display: flex; flex-direction: column; gap: .3rem; }
+.pf-meta-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+}
+.pf-meta-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .95rem; font-weight: 500; color: var(--light);
+}
+
+.genre-tags { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.gtag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+  padding: .35rem 1rem; border-radius: 2px;
+}
+.gtag-v { color: var(--violet); border: 1px solid var(--border-v); background: var(--violet-lo); }
+.gtag-g { color: var(--green);  border: 1px solid var(--border-g); background: var(--green-lo); }
+.gtag-o { color: var(--ochre);  border: 1px solid rgba(200,150,10,.3); background: rgba(200,150,10,.08); }
+.gtag-n { color: var(--muted);  border: 1px solid var(--border); }
+
+.btn-primary {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--bg); background: var(--violet);
+  text-decoration: none; padding: 1.1rem 2.5rem; display: inline-block;
+  transition: background .2s, transform .15s;
+}
+.btn-primary:hover { background: #b07ef0; transform: translateY(-2px); }
+.btn-ghost-v {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--violet); border: 1px solid var(--border-v);
+  text-decoration: none; padding: 1.1rem 2.5rem; display: inline-block;
+  transition: all .2s;
+}
+.btn-ghost-v:hover { border-color: var(--violet); background: var(--violet-lo); transform: translateY(-2px); }
+.btn-ghost-g {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--green); border: 1px solid var(--border-g);
+  text-decoration: none; padding: 1.1rem 2.5rem; display: inline-block;
+  transition: all .2s;
+}
+.btn-ghost-g:hover { border-color: var(--green); background: var(--green-lo); transform: translateY(-2px); }
+
+.pf-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+/* ─────────────────────────────── SEPARATOR ─── */
+.eye-separator {
+  display: flex; align-items: center; justify-content: center;
+  padding: 3rem 3rem; gap: 2rem;
+  background: var(--bg);
+}
+.sep-line-l {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, var(--border-v));
+}
+.sep-line-r {
+  flex: 1; height: 1px;
+  background: linear-gradient(to left, transparent, var(--border-g));
+}
+.sep-eye { width: 155px; flex-shrink: 0; opacity: .72; filter: sepia(1) saturate(2.2) hue-rotate(5deg) brightness(1.1); }
+.sep-eye img { width: 100%; height: auto; }
+
+/* ─────────────────────────────── PROJECT 2 ─── */
+/* --- CHAOS : texte gauche, image droite --- */
+.project-full-chaos { background: var(--bg-green); }
+.project-full-chaos::before {
+  content: '';
+  position: absolute; top: -80px; left: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(46,90,52,.28) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Image droite pour CHAOS — dégradé inversé */
+.project-full-chaos .pf-img::after {
+  background: linear-gradient(to left, rgba(10,22,16,0) 50%, rgba(10,22,16,.85) 100%);
+}
+.project-full-chaos .pf-img::before {
+  background: rgba(20,60,30,.25);
+}
+
+/* Numéro décoratif en fond */
+.project-num {
+  position: absolute; right: 2rem; bottom: 1.5rem; z-index: 1;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 10rem; line-height: 1; letter-spacing: -.05em;
+  color: var(--light); opacity: .025; pointer-events: none;
+  user-select: none;
+}
+
+/* Image CHAOS — object contenant si c'est une illustration */
+.pf-img-contain img {
+  object-fit: contain;
+  object-position: center;
+  padding: 3rem;
+  filter: saturate(.9) brightness(.85);
+  mix-blend-mode: screen;
+}
+
+/* ─────────────────────────────── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  background: var(--bg);
+}
+footer img { height: 32px; width: auto; opacity: .45; }
+.footer-copy { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .12em; color: var(--muted); }
+.footer-right { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .1em; color: var(--muted); text-align: right; }
+
+/* ─────────────────────────────── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: .12s; }
+.reveal-delay-2 { transition-delay: .24s; }
+
+/* ─────────────────────────────── RESPONSIVE ─── */
+@media (max-width: 960px) {
+  .nav-center { display: none; }
+  .hamburger  { display: flex; }
+  .nav-booking { display: none; }
+}
+@media (max-width: 900px) {
+  .project-full { grid-template-columns: 1fr; }
+  .pf-img { min-height: 300px; }
+  .project-full-chaos .pf-img { order: -1; }
+  .project-full-chaos .pf-img::after {
+    background: linear-gradient(to right, rgba(10,22,16,0) 50%, rgba(10,22,16,.85) 100%);
+  }
+  .pf-img-contain img { padding: 2rem; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .page-header { padding: 8rem 1.5rem 3rem; }
+  .pf-text { padding: 3rem 1.5rem; }
+  .eye-separator { padding: 2rem 1.5rem; }
+  footer { flex-direction: column; text-align: center; gap: .8rem; }
+  .footer-right { text-align: center; }
+  .project-num { display: none; }
+}
+</style>
+</head>
+<body class="lang-fr">
+
+<!-- ─── MOBILE MENU ─── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">
+    <span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span>
+  </a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="projets.html" onclick="closeMenu()">
+    <span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span>
+  </a>
+  <a href="collaborer.html" onclick="closeMenu()">
+    <span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span>
+  </a>
+  <a href="booking.html" class="mobile-booking" onclick="closeMenu()">Booking</a>
+  <div class="mobile-lang">
+    <button onclick="setLang('fr',this)">FR</button>
+    <button onclick="setLang('en',this)">EN</button>
+    <button onclick="setLang('nl',this)">NL</button>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo_dj_vizion.webp" alt="DJ VIZION">
+  </a>
+  <div class="nav-center">
+    <a href="index.html"><span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span></a>
+    <a href="about.html">About</a>
+    <a href="projets.html" class="active"><span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span></a>
+    <a href="collaborer.html"><span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span></a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button onclick="setLang('fr',this)" class="active">FR</button>
+      <button onclick="setLang('en',this)">EN</button>
+      <button onclick="setLang('nl',this)">NL</button>
+    </div>
+    <a href="booking.html" class="nav-booking">Booking</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── PAGE HEADER ─── -->
+<div class="page-header">
+  <div class="header-eyebrow">// DJ VIZION</div>
+  <h1>
+    <span class="fr">Pro<span class="accent">jets</span></span>
+    <span class="en">Pro<span class="accent">jects</span></span>
+    <span class="nl">Pro<span class="accent">jecten</span></span>
+  </h1>
+  <p class="page-header-sub">
+    <span class="fr">Des collaborations construites autour d'un son, d'une vision, d'une scène.</span>
+    <span class="en">Collaborations built around a sound, a vision, a stage.</span>
+    <span class="nl">Samenwerkingen gebouwd rond een geluid, een visie, een podium.</span>
+  </p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════ PROJET 1 — SISTA MIKA ═══════════════════════════ -->
+<div class="project-full project-full-mika reveal">
+  <div class="project-num">01</div>
+
+  <!-- Image gauche -->
+  <div class="pf-img">
+    <img src="images/The_Sista_s_SITE.webp" alt="Sista MIKA & DJ VIZION — The Live Experience" style="object-position: center 20%; filter: saturate(.88) brightness(.92);">
+  </div>
+
+  <!-- Texte droite -->
+  <div class="pf-text">
+
+    <div class="pf-tag pf-tag-v">
+      <span class="dot dot-v"></span>
+      <span class="fr">Projet actif · En tournée</span>
+      <span class="en">Active project · On tour</span>
+      <span class="nl">Actief project · Op tournee</span>
+    </div>
+
+    <h2 class="pf-title">
+      Sista MIKA<br>&amp; DJ VIZION
+    </h2>
+    <p class="pf-subtitle">The Live Experience</p>
+
+    <p class="pf-desc">
+      <span class="fr">Un show reggae conçu pour faire lever la salle. <strong>Sista MIKA</strong> en tête d'affiche, deux choristes-animatrices, DJ VIZION en sets hybrides live/effets. Un son ancré dans la tradition, projeté vers demain.</span>
+      <span class="en">A reggae show designed to get the crowd on their feet. <strong>Sista MIKA</strong> headlining, two performer-backing vocalists, DJ VIZION delivering hybrid live/effects sets. A sound rooted in tradition, projected into tomorrow.</span>
+      <span class="nl">Een reggaeshow ontworpen om de zaal op de been te brengen. <strong>Sista MIKA</strong> als headliner, twee zangeressen-animatrices, DJ VIZION met hybride live/effecten sets. Een sound geworteld in traditie, geprojecteerd naar morgen.</span>
+    </p>
+
+    <div class="genre-tags">
+      <span class="gtag gtag-v">Reggae</span>
+      <span class="gtag gtag-o">Soul</span>
+      <span class="gtag gtag-g">Live</span>
+      <span class="gtag gtag-n">
+        <span class="fr">4 artistes</span>
+        <span class="en">4 artists</span>
+        <span class="nl">4 artiesten</span>
+      </span>
+    </div>
+
+    <div class="pf-meta">
+      <div class="pf-meta-item">
+        <span class="pf-meta-label">
+          <span class="fr">Format</span><span class="en">Format</span><span class="nl">Formaat</span>
+        </span>
+        <span class="pf-meta-value">
+          <span class="fr">60 – 90 min</span>
+          <span class="en">60 – 90 min</span>
+          <span class="nl">60 – 90 min</span>
+        </span>
+      </div>
+      <div class="pf-meta-item">
+        <span class="pf-meta-label">
+          <span class="fr">Scène</span><span class="en">Stage</span><span class="nl">Podium</span>
+        </span>
+        <span class="pf-meta-value">
+          <span class="fr">Festivals · Salles · Centres culturels</span>
+          <span class="en">Festivals · Halls · Cultural centres</span>
+          <span class="nl">Festivals · Zalen · Culturele centra</span>
+        </span>
+      </div>
+      <div class="pf-meta-item">
+        <span class="pf-meta-label">Status</span>
+        <span class="pf-meta-value" style="color:var(--violet);">
+          <span class="fr">Disponible</span>
+          <span class="en">Available</span>
+          <span class="nl">Beschikbaar</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="pf-ctas">
+      <a href="booking.html" class="btn-primary">
+        <span class="fr">Demander ce show</span>
+        <span class="en">Book this show</span>
+        <span class="nl">Dit show boeken</span>
+      </a>
+      <a href="the-live-experience.html" class="btn-ghost-v">
+        <span class="fr">Découvrir le projet</span>
+        <span class="en">Discover the project</span>
+        <span class="nl">Ontdek het project</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── SÉPARATEUR AVEC ŒIL ─── -->
+<div class="eye-separator">
+  <div class="sep-line-l"></div>
+  <div class="sep-eye">
+    <img src="images/Oeil_Afro-futuriste_VIZION_OK.webp" alt="">
+  </div>
+  <div class="sep-line-r"></div>
+</div>
+
+<!-- ═══════════════════════════ PROJET 2 — CHAOS UNIT ═══════════════════════════ -->
+<div class="project-full project-full-chaos reveal">
+  <div class="project-num">02</div>
+
+  <!-- Texte gauche -->
+  <div class="pf-text">
+
+    <div class="pf-tag pf-tag-g">
+      <span class="dot dot-g"></span>
+      <span class="fr">Casting ouvert · En production</span>
+      <span class="en">Open casting · In production</span>
+      <span class="nl">Open casting · In productie</span>
+    </div>
+
+    <h2 class="pf-title">CHAOS UNIT</h2>
+    <p class="pf-subtitle">
+      <span class="fr">L'exception afro-industrielle</span>
+      <span class="en">The afro-industrial exception</span>
+      <span class="nl">De afro-industriële uitzondering</span>
+    </p>
+
+    <p class="pf-desc">
+      <span class="fr">Ragga, Afrobeat & Power Soca caribéen × <strong>melodic techno et afro house</strong> : nappes organiques et basses profondes. DJ VIZION en sets hybrides live/effets. Production : 14 titres instrumentaux produits par Ralph Van Lierde, Anvers. CHAOS UNIT recrute ses MCs et son Escouade de danseurs-animateurs.</span>
+      <span class="en">Ragga, Afrobeat & Caribbean Power Soca × <strong>melodic techno and afro house</strong>: organic layers and deep bass. DJ VIZION delivering hybrid live/effects sets. Production: 14 instrumental tracks by Ralph Van Lierde, Antwerp. CHAOS UNIT is recruiting its MCs and its Squad of dancer-performers.</span>
+      <span class="nl">Ragga, Afrobeat & Caribische Power Soca × <strong>melodic techno en afro house</strong>: organische lagen en diepe bas. DJ VIZION met hybride live/effecten sets. Productie: 14 instrumentale tracks door Ralph Van Lierde, Antwerpen. CHAOS UNIT werft zijn MCs en zijn Escouade van danser-animateurs.</span>
+    </p>
+
+    <div class="genre-tags">
+      <span class="gtag gtag-g">Ragga</span>
+      <span class="gtag gtag-g">Afrobeat</span>
+      <span class="gtag gtag-o">Power Soca</span>
+      <span class="gtag gtag-n">Melodic Techno</span>
+      <span class="gtag gtag-v">Techno / Trance</span>
+      <span class="gtag gtag-v">
+        <span class="fr">Électronique</span>
+        <span class="en">Electronic</span>
+        <span class="nl">Elektronisch</span>
+      </span>
+    </div>
+
+    <div class="pf-meta">
+      <div class="pf-meta-item">
+        <span class="pf-meta-label">
+          <span class="fr">Phase</span><span class="en">Phase</span><span class="nl">Fase</span>
+        </span>
+        <span class="pf-meta-value">
+          <span class="fr">Production instrumentale</span>
+          <span class="en">Instrumental production</span>
+          <span class="nl">Instrumentale productie</span>
+        </span>
+      </div>
+      <div class="pf-meta-item">
+        <span class="pf-meta-label">Casting</span>
+        <span class="pf-meta-value" style="color:var(--green);">
+          <span class="fr">MCs · Danseurs · Animateurs</span>
+          <span class="en">MCs · Dancers · Performers</span>
+          <span class="nl">MCs · Dansers · Animateurs</span>
+        </span>
+      </div>
+      <div class="pf-meta-item">
+        <span class="pf-meta-label">Status</span>
+        <span class="pf-meta-value">
+          <span class="fr">Préprod · 2025</span>
+          <span class="en">Pre-prod · 2025</span>
+          <span class="nl">Pre-prod · 2025</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="pf-ctas">
+      <a href="chaos-unit.html" class="btn-ghost-g">
+        <span class="fr">Découvrir le projet</span>
+        <span class="en">Discover the project</span>
+        <span class="nl">Ontdek het project</span>
+      </a>
+      <a href="collaborer.html" class="btn-ghost-g">
+        <span class="fr">Rejoindre le casting</span>
+        <span class="en">Join the casting</span>
+        <span class="nl">Doe mee aan casting</span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Image droite -->
+  <div class="pf-img pf-img-contain">
+    <img src="images/Micro_stylise_afro-futuriste.webp" alt="CHAOS UNIT">
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <img src="images/logo_dj_vizion.webp" alt="DJ VIZION">
+  <span class="footer-copy">© 2025 DJ VIZION</span>
+  <div class="footer-right">
+    <span class="fr">Sound Architect — Belgique</span>
+    <span class="en">Sound Architect — Belgium</span>
+    <span class="nl">Sound Architect — België</span>
+  </div>
+</footer>
+
+<script>
+/* ── Lang ── */
+function setLang(lang, btn) {
+  document.body.className = 'lang-' + lang;
+  localStorage.setItem('djvizion-lang', lang);
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === lang));
+}
+const saved = localStorage.getItem('djvizion-lang');
+if (saved) {
+  document.body.className = 'lang-' + saved;
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === saved));
+}
+
+/* ── Hamburger ── */
+const menu = document.getElementById('mobileMenu');
+const burger = document.getElementById('hamburger');
+function toggleMenu() {
+  const open = menu.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMenu() {
+  menu.classList.remove('open');
+  burger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Scroll reveal ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

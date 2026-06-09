@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHAOS UNIT — DJ VIZION</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & ROOT ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:        #070A09;
+  --bg2:       #0D1410;
+  --bg-purple: #0F0A1E;
+  --bg-card:   #0A0D0A;
+  --violet:    #CF35DC;
+  --violet-lo: rgba(207,53,220,.13);
+  --violet-mid:rgba(207,53,220,.28);
+  --green:     #4A8A5C;
+  --or:        #D4A008;
+  --or-lo:     rgba(212,160,8,.10);
+  --light:     #EDE6DA;
+  --muted:     rgba(237,230,218,.45);
+  --border:    rgba(237,230,218,.07);
+  --border-v:  rgba(207,53,220,.2);
+}
+
+body {
+  background: var(--bg);
+  color: var(--light);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN ── */
+body::after {
+  content: ''; position: fixed; inset: 0;
+  pointer-events: none; z-index: 999; opacity: .032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 220px;
+}
+
+/* ── SCAN-LINES ── */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  pointer-events: none; z-index: 997;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0px, transparent 3px,
+    rgba(207,53,220,.018) 3px, rgba(207,53,220,.018) 4px
+  );
+}
+
+/* ── LANG ── */
+.fr, .en, .nl { display: none; }
+body.lang-fr .fr { display: inline; }
+body.lang-en .en { display: inline; }
+body.lang-nl .nl { display: inline; }
+body.lang-fr .fr.block, body.lang-en .en.block, body.lang-nl .nl.block { display: block; }
+
+/* ─────────────────────────────────── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  padding: .8rem 2.8rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(7,10,9,.97);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo img { height: 68px; width: auto; display: block; }
+.nav-center { display: flex; align-items: center; gap: 2rem; }
+.nav-center a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.nav-center a:hover, .nav-center a.active { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 1.2rem; }
+.lang-switch { display: flex; gap: .3rem; }
+.lang-switch button {
+  background: none; border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .25rem .4rem; transition: color .2s;
+}
+.lang-switch button:hover, .lang-switch button.active { color: var(--green); }
+.nav-booking {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--bg); background: var(--violet);
+  text-decoration: none; padding: .5rem 1.2rem; transition: background .2s;
+}
+.nav-booking:hover { background: #df55e8; }
+
+/* ── HAMBURGER ── */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: .4rem;
+}
+.hamburger span {
+  display: block; width: 24px; height: 1.5px;
+  background: var(--light); transition: transform .3s, opacity .3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 190;
+  background: rgba(7,10,9,.97);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem; transform: translateX(100%);
+  transition: transform .4s cubic-bezier(.77,0,.175,1);
+}
+.mobile-menu.open { transform: translateX(0); }
+.mobile-menu a {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem,8vw,3rem); font-weight: 700;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; letter-spacing: .05em; transition: color .2s;
+}
+.mobile-menu a:hover { color: var(--violet); }
+.mobile-menu .mobile-booking {
+  font-size: 1rem; color: var(--bg); background: var(--violet);
+  padding: .7rem 2.2rem; letter-spacing: .1em;
+}
+.mobile-lang { display: flex; gap: 1.2rem; margin-top: 1rem; }
+.mobile-lang button {
+  background: none; border: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .4rem .9rem; transition: all .2s;
+}
+.mobile-lang button:hover, .mobile-lang button.active { color: var(--green); border-color: rgba(74,138,92,.3); }
+
+/* ─────────────────────────────── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1.15fr 1fr;
+  align-items: center;
+  position: relative; overflow: hidden;
+}
+.hero-bloom-1 {
+  position: absolute; top: -120px; left: -120px;
+  width: 750px; height: 750px;
+  background: radial-gradient(circle, rgba(207,53,220,.1) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.hero-bloom-2 {
+  position: absolute; bottom: -80px; left: 25%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(207,53,220,.055) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.hero-content {
+  padding: 9rem 3rem 5rem 3rem;
+  position: relative; z-index: 2;
+  opacity: 0; animation: fadeUp .8s .1s forwards;
+}
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(5rem, 15vw, 13rem);
+  text-transform: uppercase; line-height: .85; letter-spacing: -.04em;
+}
+.hero h1 .accent { color: var(--violet); }
+.hero-tagline {
+  margin-top: 2rem;
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(.75rem, 1.1vw, .95rem); letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(237,230,218,.36);
+  max-width: 520px; line-height: 1.8;
+}
+.hero-status {
+  margin-top: 1.8rem; display: inline-flex; align-items: center; gap: .6rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--violet);
+}
+.hero-status::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--violet); box-shadow: 0 0 8px rgba(207,53,220,.8);
+  animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* Hero image */
+.hero-visual {
+  position: relative; height: 100vh; overflow: hidden;
+  opacity: 0; animation: fadeIn 1.1s .3s forwards;
+}
+.hero-visual img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  filter: saturate(.82) contrast(1.05) brightness(.88);
+  display: block;
+}
+.hero-visual-fade-l {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to right, var(--bg) 0%, transparent 50%);
+}
+.hero-visual-fade-b {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 1; height: 240px;
+  background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+}
+
+/* ─────────────────────────────── DIVIDER ─── */
+.divider {
+  height: 1px; margin: 0 3rem;
+  background: linear-gradient(to right,
+    transparent 0%, var(--border-v) 30%,
+    var(--border-v) 70%, transparent 100%);
+  opacity: .55;
+}
+
+/* ─────────────────────────────── EYE SEP ─── */
+.eye-sep {
+  display: flex; justify-content: center; align-items: center;
+  padding: 2.8rem 0; position: relative; z-index: 5;
+}
+.eye-sep img {
+  width: 155px; opacity: .72;
+  filter: sepia(1) saturate(2.2) hue-rotate(5deg) brightness(1.1)
+          drop-shadow(0 0 12px rgba(200,150,10,.5))
+          drop-shadow(0 0 28px rgba(200,150,10,.25));
+}
+
+/* ─────────────────────────────── SECTIONS ─── */
+section { padding: 5rem 3rem; position: relative; overflow: hidden; }
+
+.sec-num-bg {
+  position: absolute; top: -.1em; right: -.05em;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(7rem, 18vw, 15rem);
+  line-height: 1; opacity: .025; color: var(--light);
+  pointer-events: none; user-select: none; z-index: 0;
+  letter-spacing: -.04em;
+}
+
+.sec-bloom {
+  position: absolute; top: -80px; right: -80px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(207,53,220,.07) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.sec-bloom-l {
+  position: absolute; bottom: -80px; left: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(207,53,220,.045) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+
+.sec-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: 1.2rem; opacity: .85;
+  display: flex; align-items: center; gap: .8rem;
+  position: relative; z-index: 2;
+}
+.sec-label::after { content: ''; width: 35px; height: 1px; background: var(--border-v); }
+
+.sec-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  text-transform: uppercase; line-height: .88; letter-spacing: -.03em;
+  margin-bottom: 2.5rem; color: var(--light);
+  position: relative; z-index: 2;
+}
+.sec-title .accent   { color: var(--violet); }
+.sec-title .accent-o { color: var(--or); }
+
+/* ── 01 CONCEPT ── */
+.concept-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start;
+  position: relative; z-index: 2;
+}
+.concept-lead {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  text-transform: uppercase; line-height: 1.05; letter-spacing: -.02em;
+  color: var(--light);
+}
+.concept-lead span { color: var(--violet); }
+.concept-body { font-size: 1rem; line-height: 2; color: rgba(237,230,218,.62); }
+.concept-body p + p { margin-top: 1.2rem; }
+.concept-body strong { color: var(--light); font-weight: 500; }
+
+.scission-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--border-v); margin-top: 3rem;
+  position: relative; z-index: 2;
+}
+.scission-block {
+  background: var(--bg-card); padding: 2.5rem; position: relative;
+}
+.scission-block::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+}
+.scission-block.ventre::before { background: var(--or); }
+.scission-block.esprit::before { background: var(--violet); }
+.scission-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .28em; text-transform: uppercase; margin-bottom: .6rem;
+}
+.scission-block.ventre .scission-label { color: var(--or); }
+.scission-block.esprit .scission-label { color: var(--violet); }
+.scission-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 1.4rem; text-transform: uppercase; letter-spacing: -.01em;
+  margin-bottom: .8rem; color: var(--light);
+}
+.scission-desc { font-size: .9rem; line-height: 1.85; color: rgba(237,230,218,.55); }
+
+/* ── 02 ÉQUIPAGE ── */
+.equipe-layout {
+  display: grid; grid-template-columns: 1fr 1.6fr;
+  gap: 3.5rem; align-items: start;
+  position: relative; z-index: 2;
+}
+.equipe-img-wrap { position: sticky; top: 110px; }
+.equipe-img-wrap img {
+  width: 100%; display: block;
+  aspect-ratio: 4/3;
+  object-fit: cover; object-position: left center;
+  filter: saturate(.68) contrast(1.15) brightness(.7);
+}
+.equipe-img-caption {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(237,230,218,.2); margin-top: .7rem;
+  border-top: 1px solid var(--border-v); padding-top: .5rem;
+}
+.equipe-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+}
+.equipe-card {
+  border-top: 1px solid var(--border-v); padding: 2rem 0 0;
+  transition: border-color .3s;
+}
+.equipe-card:hover { border-top-color: rgba(207,53,220,.5); }
+.equipe-number {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 4rem; color: var(--violet); opacity: .1; line-height: 1; margin-bottom: .5rem;
+}
+.equipe-role {
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .2em;
+  color: var(--violet); margin-bottom: .3rem;
+}
+.equipe-nom {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 500;
+  font-size: .85rem; letter-spacing: .04em; color: rgba(237,230,218,.38);
+  text-transform: uppercase; margin-bottom: .8rem;
+}
+.equipe-desc { font-size: .88rem; line-height: 1.85; color: rgba(237,230,218,.52); }
+
+/* ── 03 ADN SCÉNIQUE ── */
+.scenique-grid {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; align-items: start;
+  position: relative; z-index: 2;
+}
+.scenique-point {
+  display: flex; gap: 1.5rem; padding: 1.8rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.scenique-point:last-child { border-bottom: none; }
+.scenique-icon {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 2rem; color: var(--violet); opacity: .2; line-height: 1; min-width: 3rem;
+}
+.scenique-content h4 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: .95rem; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--light); margin-bottom: .4rem;
+}
+.scenique-content p { font-size: .88rem; line-height: 1.85; color: rgba(237,230,218,.52); }
+.manifeste-block {
+  background: var(--bg-card);
+  border-left: 3px solid var(--violet);
+  padding: 2.5rem 3rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 500;
+  text-transform: uppercase; line-height: 1.6; letter-spacing: .02em;
+  color: rgba(237,230,218,.7);
+  position: relative; z-index: 2;
+}
+.manifeste-block em { font-style: normal; color: var(--violet); }
+
+/* ── 04 CASTING ── */
+.casting-section {
+  background: var(--bg-purple);
+  border-top: 1px solid var(--border-v);
+  border-bottom: 1px solid var(--border-v);
+  padding: 5rem 3rem;
+  position: relative; overflow: hidden;
+}
+.casting-section::before {
+  content: ''; position: absolute; top: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse, rgba(207,53,220,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.casting-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+.casting-card {
+  border: 1px solid var(--border-v); padding: 2.2rem 2rem;
+  position: relative; overflow: hidden;
+  transition: border-color .3s, background .3s;
+}
+.casting-card::before {
+  content: attr(data-num); position: absolute; top: 1.5rem; right: 1.5rem;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 3.5rem; color: var(--violet); opacity: .07; line-height: 1;
+  pointer-events: none;
+}
+.casting-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--violet);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s ease;
+}
+.casting-card:hover { border-color: rgba(207,53,220,.45); background: rgba(207,53,220,.04); }
+.casting-card:hover::after { transform: scaleX(1); }
+.casting-card-wide {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: start;
+}
+.casting-type {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: .6rem; opacity: .85;
+}
+.casting-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 1.3rem; text-transform: uppercase; letter-spacing: -.01em;
+  color: var(--light); margin-bottom: 1rem;
+}
+.casting-desc { font-size: .9rem; line-height: 1.9; color: rgba(237,230,218,.55); margin-bottom: 1.2rem; }
+.casting-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
+.ctag {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
+  border: 1px solid var(--border-v); color: var(--violet); padding: .2rem .65rem;
+}
+
+/* ── FORM CASTING ── */
+.form-casting {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem;
+  align-items: start; padding-top: 4rem;
+  border-top: 1px solid var(--border-v);
+}
+.form-intro-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: 1rem; opacity: .85;
+  display: flex; align-items: center; gap: .8rem;
+}
+.form-intro-label::after { content: ''; width: 30px; height: 1px; background: var(--border-v); }
+.form-intro-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(1.8rem,3.5vw,3rem); text-transform: uppercase;
+  line-height: .9; letter-spacing: -.02em; margin-bottom: 1.8rem; color: var(--light);
+}
+.form-intro-title .accent { color: var(--violet); }
+.form-intro-body { font-size: .92rem; line-height: 1.9; color: rgba(237,230,218,.55); }
+.form-group { margin-bottom: 1.2rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+.form-label {
+  display: block; font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: .5rem;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%; background: rgba(207,53,220,.04);
+  border: 1px solid var(--border-v);
+  color: var(--light); font-family: 'DM Sans', sans-serif;
+  font-size: .92rem; padding: .85rem 1rem; outline: none;
+  transition: border-color .2s, background .2s; appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: rgba(207,53,220,.5); background: rgba(207,53,220,.07);
+}
+.form-textarea { min-height: 120px; resize: vertical; }
+.form-select option { background: #0a050f; color: var(--light); }
+.btn-submit {
+  display: inline-block; margin-top: .5rem;
+  background: var(--violet); color: var(--bg);
+  font-family: 'Space Mono', monospace; font-weight: 700;
+  font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+  padding: 1rem 2.5rem; border: none; cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.btn-submit:hover { background: #df55e8; transform: translateY(-2px); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: var(--bg);
+}
+footer img { height: 32px; width: auto; opacity: .45; }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.footer-links a:hover { color: var(--violet); }
+.footer-copy { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .1em; color: var(--muted); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.reveal { opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-delay-1 { transition-delay:.12s; }
+.reveal-delay-2 { transition-delay:.24s; }
+.reveal-delay-3 { transition-delay:.36s; }
+.reveal-delay-4 { transition-delay:.48s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .nav-center { display: none; }
+  .hamburger  { display: flex; }
+  .nav-booking { display: none; }
+}
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-visual { height: 55vh; }
+  .hero-visual-fade-l { background: linear-gradient(to top, var(--bg) 0%, transparent 50%); }
+  .concept-grid, .scenique-grid, .form-casting { grid-template-columns: 1fr; gap: 2.5rem; }
+  .equipe-layout { grid-template-columns: 1fr; }
+  .equipe-img-wrap { position: static; }
+  .equipe-grid { grid-template-columns: 1fr 1fr; }
+  .casting-grid { grid-template-columns: 1fr; }
+  .casting-card-wide { grid-template-columns: 1fr; }
+  .scission-grid { grid-template-columns: 1fr; gap: 1px; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .hero-content, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .hero-content { padding-top: 7rem; }
+  .casting-section { padding: 4rem 1.5rem; }
+  .divider { margin: 0 1.5rem; }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+@media (max-width: 480px) {
+  .equipe-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body class="lang-fr">
+
+<!-- ─── MOBILE MENU ─── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">
+    <span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span>
+  </a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="projets.html" onclick="closeMenu()">
+    <span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span>
+  </a>
+  <a href="collaborer.html" onclick="closeMenu()">
+    <span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span>
+  </a>
+  <a href="booking.html" class="mobile-booking" onclick="closeMenu()">Booking</a>
+  <div class="mobile-lang">
+    <button onclick="setLang('fr',this)">FR</button>
+    <button onclick="setLang('en',this)">EN</button>
+    <button onclick="setLang('nl',this)">NL</button>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo_dj_vizion.webp" alt="DJ VIZION">
+  </a>
+  <div class="nav-center">
+    <a href="index.html"><span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span></a>
+    <a href="about.html">About</a>
+    <a href="projets.html" class="active"><span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span></a>
+    <a href="collaborer.html"><span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span></div>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button onclick="setLang('fr',this)" class="active">FR</button>
+      <button onclick="setLang('en',this)">EN</button>
+      <button onclick="setLang('nl',this)">NL</button>
+    </div>
+    <a href="booking.html" class="nav-booking">Booking</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-bloom-1"></div>
+  <div class="hero-bloom-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="fr">DJ VIZION / Xavier Itota — Belgique</span>
+      <span class="en">DJ VIZION / Xavier Itota — Belgium</span>
+      <span class="nl">DJ VIZION / Xavier Itota — België</span>
+    </div>
+    <h1>CHAOS<br><span class="accent">UNIT</span></h1>
+    <p class="hero-tagline">
+      <span class="fr">La fureur afro-caribéenne filtrée par une architecture électronique européenne radicale. Ragga × Afrobeat × Power Soca × melodic techno &amp; afro house.</span>
+      <span class="en">Afro-Caribbean fury filtered through a radical European electronic architecture. Ragga × Afrobeat × Power Soca × melodic techno &amp; afro house.</span>
+      <span class="nl">Afro-Caribische furie gefilterd door een radicale Europese elektronische architectuur. Ragga × Afrobeat × Power Soca × melodic techno &amp; afro house.</span>
+    </p>
+    <div class="hero-status">
+      <span class="fr">Casting ouvert — 14 titres instrumentaux produits</span>
+      <span class="en">Open casting — 14 instrumental tracks produced</span>
+      <span class="nl">Open casting — 14 instrumentale tracks geproduceerd</span>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <img src="images/VIZION_Portrait_cyberpunk_futurist.webp" alt="DJ VIZION — CHAOS UNIT">
+    <div class="hero-visual-fade-l"></div>
+    <div class="hero-visual-fade-b"></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ─── 01 LE CONCEPT ─── -->
+<section>
+  <div class="sec-bloom"></div>
+  <div class="sec-num-bg">01</div>
+
+  <div class="sec-label reveal">
+    <span class="fr">01 — Le Concept</span>
+    <span class="en">01 — The Concept</span>
+    <span class="nl">01 — Het Concept</span>
+  </div>
+
+  <div class="concept-grid">
+    <div class="reveal">
+      <p class="concept-lead">
+        <span class="fr">La <span>Scission</span><br>Thermique</span>
+        <span class="en">The Thermal <span>Split</span></span>
+        <span class="nl">De Thermische <span>Scheuring</span></span>
+      </p>
+    </div>
+    <div class="concept-body reveal reveal-delay-1">
+      <p>
+        <span class="fr">CHAOS UNIT est une collision brutale entre l'électronique organique du <strong>melodic techno et de l'afro house</strong> — nappes chaudes, basses profondes — et la fureur incandescente du <strong>Power Soca, du Ragga et de l'Afrobeat</strong>. Un Chaos Organisé où la puissance des rythmes afro-caribéens est filtrée par une architecture électronique européenne radicale.</span>
+        <span class="en">CHAOS UNIT is a brutal collision between the organic electronics of <strong>melodic techno and afro house</strong> — warm layers, deep bass — and the incandescent fury of <strong>Power Soca, Ragga and Afrobeat</strong>. Organized Chaos where the power of afro-Caribbean rhythms is filtered through radical European electronic architecture.</span>
+        <span class="nl">CHAOS UNIT is een brutale botsing tussen de organische elektronica van <strong>melodic techno en afro house</strong> — warme lagen, diepe bas — en de gloeiende furie van <strong>Power Soca, Ragga en Afrobeat</strong>. Georganiseerde Chaos waarbij de kracht van afro-Caribische ritmes wordt gefilterd door een radicale Europese elektronische architectuur.</span>
+      </p>
+      <p>
+        <span class="fr">Né d'une urgence de faire exploser les frontières du son, CHAOS UNIT est la seule réponse possible à l'uniformisation du monde : une transe afrofuturiste électronique. La collision Anvers–Bruxelles–Caraïbes.</span>
+        <span class="en">Born from an urgency to blow open the boundaries of sound, CHAOS UNIT is the only possible answer to a homogenized world: an electronic afrofuturist trance. The Antwerp–Brussels–Caribbean collision.</span>
+        <span class="nl">Geboren uit een urgentie om de grenzen van het geluid op te blazen, is CHAOS UNIT het enige mogelijke antwoord op de uniformisering van de wereld: een elektronische afrofuturistische trance. De Antwerpen–Brussel–Caribische botsing.</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="scission-grid reveal">
+    <div class="scission-block ventre">
+      <div class="scission-label">
+        <span class="fr">Les Fondations — Le Ventre</span>
+        <span class="en">The Foundations — The Gut</span>
+        <span class="nl">De Fundamenten — De Buik</span>
+      </div>
+      <div class="scission-title">Culture Sound System</div>
+      <p class="scission-desc">
+        <span class="fr">Des basses organiques, profondes et chaleureuses qui forcent le mouvement instinctif. L'ancrage <strong>afro-caribéen</strong> — le ventre du son.</span>
+        <span class="en">Organic, deep, warm bass that forces instinctive movement. The <strong>afro-Caribbean</strong> anchor — the gut of the sound.</span>
+        <span class="nl">Organische, diepe, warme bas die instinctieve beweging afdwingt. Het <strong>afro-Caribische</strong> anker — de buik van het geluid.</span>
+      </p>
+    </div>
+    <div class="scission-block esprit">
+      <div class="scission-label">
+        <span class="fr">L'Atmosphère — L'Esprit</span>
+        <span class="en">The Atmosphere — The Spirit</span>
+        <span class="nl">De Sfeer — De Geest</span>
+      </div>
+      <div class="scission-title">Cold Wave Architecture</div>
+      <p class="scission-desc">
+        <span class="fr">Des nappes de synthétiseurs organiques et chaudes — melodic techno et afro house — traitées par des effets Dub pour créer une tension spatiale profonde et enveloppante.</span>
+        <span class="en">Organic, warm synthesizer layers — melodic techno and afro house — processed through Dub effects to create a deep, enveloping spatial tension.</span>
+        <span class="nl">Organische, warme synthesizerlagen — melodic techno en afro house — verwerkt door Dub-effecten om een diepe, omhullende ruimtelijke spanning te creëren.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ŒIL SÉPARATEUR ─── -->
+<div class="eye-sep">
+  <img src="images/Oeil_Afro-futuriste_VIZION_OK.webp" alt="">
+</div>
+
+<!-- ─── 02 L'ÉQUIPAGE ─── -->
+<section style="background: var(--bg2);">
+  <div class="sec-bloom-l"></div>
+  <div class="sec-num-bg">02</div>
+
+  <div class="sec-label reveal">
+    <span class="fr">02 — L'Équipage</span>
+    <span class="en">02 — The Crew</span>
+    <span class="nl">02 — De Bemanning</span>
+  </div>
+  <h2 class="sec-title reveal">
+    <span class="fr">Les <span class="accent">Architectes</span> du Chaos</span>
+    <span class="en">The <span class="accent">Architects</span> of Chaos</span>
+    <span class="nl">De <span class="accent">Architecten</span> van Chaos</span>
+  </h2>
+
+  <!-- Structure finale : 2 colonnes haut / image / 3 colonnes bas -->
+  <div style="position:relative; z-index:2;">
+
+    <!-- Ligne 1 : 00 Vizion + 04 Ralph en 2 colonnes -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+
+      <!-- 00 Vizion -->
+      <div class="equipe-card reveal">
+        <div class="equipe-number">00</div>
+        <div class="equipe-role">
+          <span class="fr">L'Architecte</span><span class="en">The Architect</span><span class="nl">De Architect</span>
+        </div>
+        <div class="equipe-nom">Vizion — Xavier Itota</div>
+        <p class="equipe-desc" style="margin-top:.8rem;">
+          <span class="fr">Métis belgo-congolais, il porte les deux rives de l'Atlantique avant même d'avoir choisi sa musique. Enfant en Flandre, il grandit au son des disques de sa grande sœur — Earth Wind &amp; Fire, Sun Ra, James Brown. Adolescent, trois ans au Zaïre le plongent dans la rumba congolaise, les rythmes d'Afrique de l'Ouest et du Sud : la musique africaine, de l'intérieur. À 18 ans, Bruxelles lui révèle la violence du hard-rock et l'irrévérence du punk — deux énergies qui ne le quitteront plus. Quand Bob Marley et Fela surgissent avec leurs discours panafricanistes, il retrouve ses racines et découvre la vivacité des sound systems. CHAOS UNIT est l'aboutissement de ce trajet : relier la force des rythmes africains à l'énergie désobéissante de certaines musiques occidentales. Sur scène, armure textile radicale, rigueur immobile. Il ne lance pas des morceaux — il transforme, déconstruit et performe la musique en direct via <strong style="color:var(--light);font-weight:500">sets hybrides live/effets</strong>.</span>
+          <span class="en">Half Belgian, half Congolese, he carries both shores of the Atlantic before ever choosing his music. Growing up in Flanders, he was raised on his older sister's records — Earth Wind &amp; Fire, Sun Ra, James Brown. As a teenager, three years in Zaire immersed him in Congolese rumba, West and South African rhythms: African music, from the inside. At 18, Brussels revealed the violence of hard rock and the irreverence of punk — two energies that never left him. When Bob Marley and Fela appeared with their pan-Africanist discourse, he returned to his roots and discovered the vitality of sound systems. CHAOS UNIT is the culmination of that journey: connecting the power of African rhythms with the disobedient energy of certain Western music. On stage: radical textile armor, motionless rigor. He doesn't play tracks — he transforms, deconstructs and performs music live through <strong style="color:var(--light);font-weight:500">hybrid live/effects sets</strong>.</span>
+          <span class="nl">Half Belgisch, half Congolees, hij draagt beide oevers van de Atlantische Oceaan al mee voor hij ooit zijn muziek heeft gekozen. Opgegroeid in Vlaanderen, groot geworden op de platen van zijn oudere zus — Earth Wind &amp; Fire, Sun Ra, James Brown. Als tiener bracht hij drie jaar door in Zaïre en dompelde zich onder in de Congolese rumba, de ritmes van West- en Zuid-Afrika: Afrikaanse muziek, van binnenuit. Op zijn 18e onthulde Brussel hem het geweld van hard rock en de oneerbiedigheid van punk — twee energieën die hem nooit meer loslieten. Toen Bob Marley en Fela verschenen met hun pan-Afrikaans discours, keerde hij terug naar zijn roots en ontdekte de levendigheid van sound systems. CHAOS UNIT is het resultaat van die reis: de kracht van Afrikaanse ritmes verbinden met de ongehoorzame energie van bepaalde westerse muziek. Op het podium: radicaal textiel pantser, roerloze strengheid. Hij lanceert geen nummers — hij transformeert, deconstrueert en performt muziek live via <strong style="color:var(--light);font-weight:500">hybride live/effecten sets</strong>.</span>
+        </p>
+      </div>
+
+      <!-- 04 Ralph -->
+      <div class="equipe-card reveal reveal-delay-1">
+        <div class="equipe-number">04</div>
+        <div class="equipe-role">
+          <span class="fr">Compositeur · Producteur</span>
+          <span class="en">Composer · Producer</span>
+          <span class="nl">Componist · Producer</span>
+        </div>
+        <div class="equipe-nom">Ralph Van Lierde — Anvers</div>
+        <p class="equipe-desc" style="margin-top:.8rem;">
+          <span class="fr">Ses racines sont à Londres et Birmingham, dans la communauté jamaïcaine — à une époque où il était l'un des rares Blancs acceptés dans ces cercles, non pas seulement pour la musique, mais parce qu'il s'intéressait à la culture dans son ensemble. C'est là que s'est forgée sa formation profonde : la musique afro-caribéenne, de l'intérieur. La house music, il la découvrira plus tard, en fréquentant le Café d'Anvers à Anvers — en spectateur fasciné, jamais en acteur. CHAOS UNIT est la synthèse de ces deux mondes : les rythmes du Sud superposés à l'électronique du Nord, avec des instruments vintages et des samples comme épices. Comme un chef cuisinier qui assemble des ingrédients de plusieurs continents — pour créer des saveurs qui n'existaient pas encore, et qui sont appréciées tant au sud qu'au nord.</span>
+          <span class="en">His roots are in London and Birmingham, in the Jamaican community — at a time when he was one of the few white people accepted in those circles, not only for the music, but because he was genuinely interested in the culture as a whole. That is where his deep formation was forged: afro-Caribbean music, from the inside. House music he would discover later, as a regular at Café d'Anvers in Antwerp — a fascinated observer, never a participant. CHAOS UNIT is the synthesis of these two worlds: the rhythms of the South layered over the electronics of the North, with vintage instruments and samples as spices. Like a chef assembling ingredients from several continents — to create flavours that didn't yet exist, appreciated both in the South and in the North.</span>
+          <span class="nl">Zijn wortels liggen in Londen en Birmingham, in de Jamaicaanse gemeenschap — in een tijd dat hij een van de weinige blanken was die er werd aanvaard, niet alleen omwille van de muziek, maar omdat hij zich ook breder interesseerde voor de cultuur als geheel. Daar werd zijn diepe vorming gesmeed: de afro-Caribische muziek, van binnenuit. De house muziek ontdekte hij later, als vaste bezoeker van dancing Café d'Anvers in Antwerpen — als gefascineerde toeschouwer, nooit als acteur. CHAOS UNIT is de synthese van die twee werelden: de ritmes van het Zuiden over de elektronica van het Noorden, met vintage instrumenten en samples als specerijen. Als een kok die ingrediënten van verschillende continenten samenbrengt — om smaken te creëren die nog niet bestonden, en die zowel in het Zuiden als in het Noorden worden gewaardeerd.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Image Console — pleine largeur -->
+    <div class="equipe-img-wrap reveal" style="margin-bottom:1.5rem;">
+      <img src="images/Console_Mixage_Violette.webp" alt="CHAOS UNIT — Architecture sonore">
+      <div class="equipe-img-caption">
+        <span class="fr">Architecture sonore — Sets hybrides live / effets</span>
+        <span class="en">Sound architecture — Hybrid live / effects sets</span>
+        <span class="nl">Geluidsarchitectuur — Hybride live / effecten sets</span>
+      </div>
+    </div>
+
+    <!-- Ligne 3 : MCs 01/02/03 en 3 colonnes -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem;">
+      <div class="equipe-card reveal reveal-delay-1">
+        <div class="equipe-number">01</div>
+        <div class="equipe-role">
+          <span class="fr">L'Impact</span><span class="en">The Impact</span><span class="nl">De Impact</span>
+        </div>
+        <div class="equipe-nom">Power MC — <span class="fr">casting ouvert</span><span class="en">open casting</span><span class="nl">open casting</span></div>
+        <p class="equipe-desc">
+          <span class="fr">L'aboyeur. Voix perforante, gestion de la fureur et de l'énergie de foule. Discipline scénique absolue.</span>
+          <span class="en">The barker. Piercing voice, managing crowd fury and energy. Absolute stage discipline.</span>
+          <span class="nl">De schreeuwer. Doordringende stem, beheer van woede en energie van de menigte.</span>
+        </p>
+      </div>
+      <div class="equipe-card reveal reveal-delay-2">
+        <div class="equipe-number">02</div>
+        <div class="equipe-role">
+          <span class="fr">La Précision</span><span class="en">The Precision</span><span class="nl">De Precisie</span>
+        </div>
+        <div class="equipe-nom">Fast Flow MC — <span class="fr">casting ouvert</span><span class="en">open casting</span><span class="nl">open casting</span></div>
+        <p class="equipe-desc">
+          <span class="fr">L'expert technique. Des flows millimétrés insérés comme des pièces mécaniques dans la rythmique.</span>
+          <span class="en">The technical expert. Precision flows inserted like mechanical parts into the rhythm.</span>
+          <span class="nl">De technische expert. Nauwkeurige flows als mechanische onderdelen in het ritme.</span>
+        </p>
+      </div>
+      <div class="equipe-card reveal reveal-delay-3">
+        <div class="equipe-number">03</div>
+        <div class="equipe-role">
+          <span class="fr">La Profondeur</span><span class="en">The Depth</span><span class="nl">De Diepte</span>
+        </div>
+        <div class="equipe-nom">Mystic MC — <span class="fr">casting ouvert</span><span class="en">open casting</span><span class="nl">open casting</span></div>
+        <p class="equipe-desc">
+          <span class="fr">L'ancrage sombre. Résonance Dub, dimension sacrée. La gravité qui donne du sens au chaos ambiant.</span>
+          <span class="en">The dark anchor. Dub resonance, sacred dimension. The gravity that gives meaning to the surrounding chaos.</span>
+          <span class="nl">Het donkere anker. Dub-resonantie, heilige dimensie. De zwaartekracht die betekenis geeft aan de chaos.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Fermeture (Ralph retiré d'ici, intégré dans ligne 1) -->
+    <div style="display:none;">
+      <div class="equipe-card" style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:start;">
+        <div>
+          <div class="equipe-number">04</div>
+          <div class="equipe-role">
+            <span class="fr">Compositeur · Producteur</span>
+            <span class="en">Composer · Producer</span>
+            <span class="nl">Componist · Producer</span>
+          </div>
+          <div class="equipe-nom">Ralph Van Lierde — Anvers</div>
+        </div>
+        <p class="equipe-desc">
+          <span class="fr">Ses racines sont à Londres et Birmingham, dans la communauté jamaïcaine — à une époque où il était l'un des rares Blancs acceptés dans ces cercles, non pas seulement pour la musique, mais parce qu'il s'intéressait à la culture dans son ensemble. C'est là que s'est forgée sa formation profonde : la musique afro-caribéenne, de l'intérieur. La house music, il la découvrira plus tard, en fréquentant le Café d'Anvers à Anvers — en spectateur fasciné, jamais en acteur. CHAOS UNIT est la synthèse de ces deux mondes : les rythmes du Sud superposés à l'électronique du Nord, avec des instruments vintages et des samples comme épices. Comme un chef cuisinier qui assemble des ingrédients de plusieurs continents — pour créer des saveurs qui n'existaient pas encore, et qui sont appréciées tant au sud qu'au nord.</span>
+          <span class="en">His roots are in London and Birmingham, in the Jamaican community — at a time when he was one of the few white people accepted in those circles, not only for the music, but because he was genuinely interested in the culture as a whole. That is where his deep formation was forged: afro-Caribbean music, from the inside. House music he would discover later, as a regular at Café d'Anvers in Antwerp — a fascinated observer, never a participant. CHAOS UNIT is the synthesis of these two worlds: the rhythms of the South layered over the electronics of the North, with vintage instruments and samples as spices. Like a chef assembling ingredients from several continents — to create flavours that didn't yet exist, appreciated both in the South and in the North.</span>
+          <span class="nl">Zijn wortels liggen in Londen en Birmingham, in de Jamaicaanse gemeenschap — in een tijd dat hij een van de weinige blanken was die er werd aanvaard, niet alleen omwille van de muziek, maar omdat hij zich ook breder interesseerde voor de cultuur als geheel. Daar werd zijn diepe vorming gesmeed: de afro-Caribische muziek, van binnenuit. De house muziek ontdekte hij later, als vaste bezoeker van dancing Café d'Anvers in Antwerpen — als gefascineerde toeschouwer, nooit als acteur. CHAOS UNIT is de synthese van die twee werelden: de ritmes van het Zuiden over de elektronica van het Noorden, met vintage instrumenten en samples als specerijen. Als een kok die ingrediënten van verschillende continenten samenbrengt — om smaken te creëren die nog niet bestonden, en die zowel in het Zuiden als in het Noorden worden gewaardeerd.</span>
+        </p>
+      </div>
+    </div><!-- fin display:none -->
+
+  </div><!-- fin layout final -->
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── 03 ADN SCÉNIQUE ─── -->
+<section>
+  <div class="sec-bloom"></div>
+  <div class="sec-num-bg">03</div>
+
+  <div class="sec-label reveal">
+    <span class="fr">03 — L'ADN Scénique</span>
+    <span class="en">03 — Stage DNA</span>
+    <span class="nl">03 — Podium DNA</span>
+  </div>
+  <h2 class="sec-title reveal">
+    <span class="fr">L'<span class="accent">Obscurité</span> Transpercée</span>
+    <span class="en">Darkness <span class="accent">Pierced</span></span>
+    <span class="nl">Duisternis <span class="accent">Doorboord</span></span>
+  </h2>
+
+  <!-- Manifeste — pleine largeur -->
+  <div class="manifeste-block reveal" style="margin-bottom:2.5rem;">
+    <span class="fr">"Si votre programmation cherche <em>la sécurité</em>, nous ne sommes pas pour vous.<br><br>Si elle cherche <em>l'exception</em>, nous sommes l'évidence."</span>
+    <span class="en">"If your programming seeks <em>safety</em>, we are not for you.<br><br>If it seeks <em>the exception</em>, we are the obvious choice."</span>
+    <span class="nl">"Als uw programmering <em>veiligheid</em> zoekt, zijn wij niet voor u.<br><br>Als het <em>de uitzondering</em> zoekt, zijn wij de evidentie."</span>
+  </div>
+
+  <!-- Image — bandeau pleine largeur -->
+  <div class="reveal" style="margin-bottom:3rem; overflow:hidden; position:relative;">
+    <img src="images/afrofuturist_studio_laptop.webp" alt="CHAOS UNIT — Architecture sonore"
+         style="width:100%; height:320px; object-fit:cover; object-position:center 30%; display:block;
+                filter:saturate(.75) contrast(1.1) brightness(.82);
+                border-top:2px solid var(--border-v); border-bottom:2px solid var(--border-v);">
+  </div>
+
+  <!-- 4 points — 2 colonnes -->
+  <div class="scenique-grid" style="grid-template-columns:1fr 1fr;">
+    <div class="scenique-point reveal">
+      <div class="scenique-icon">01</div>
+      <div class="scenique-content">
+        <h4><span class="fr">Le refus du tout-visible</span><span class="en">Refusing total visibility</span><span class="nl">Weigering van totale zichtbaarheid</span></h4>
+        <p><span class="fr">Le show ne s'offre pas à regarder. Il s'impose à subir. L'ombre est l'espace dramaturgique principal.</span><span class="en">The show isn't for watching. It's for enduring. Shadow is the primary dramaturgical space.</span><span class="nl">De show is niet om naar te kijken. Hij is om te ondergaan. Schaduw is de primaire dramaturgische ruimte.</span></p>
+      </div>
+    </div>
+    <div class="scenique-point reveal reveal-delay-1">
+      <div class="scenique-icon">02</div>
+      <div class="scenique-content">
+        <h4><span class="fr">La lumière-cicatrice</span><span class="en">Scar-light</span><span class="nl">Littekenlicht</span></h4>
+        <p><span class="fr">Faisceaux blancs froids et stroboscopiques uniquement. Esthétique robotique et saccadée. Aucune couleur chaude.</span><span class="en">Cold white stroboscopic beams only. Robotic, jerky aesthetic. No warm colors.</span><span class="nl">Alleen koude witte stroboscopische stralen. Robotachtige, schokkerige esthetiek. Geen warme kleuren.</span></p>
+      </div>
+    </div>
+    <div class="scenique-point reveal reveal-delay-2">
+      <div class="scenique-icon">03</div>
+      <div class="scenique-content">
+        <h4><span class="fr">Le silence industriel</span><span class="en">Industrial silence</span><span class="nl">Industriële stilte</span></h4>
+        <p><span class="fr">Les ruptures brutales et le silence weaponisé rendent l'expérience incomparable. Le public ne regarde pas un concert — il subit un événement climatique.</span><span class="en">Brutal breaks and weaponized silence make the experience unmatched. The audience doesn't watch a concert — they endure a weather event.</span><span class="nl">Brutale breuken en bewapende stilte maken de ervaring ongeëvenaard. Het publiek ondergaat een weerevenement.</span></p>
+      </div>
+    </div>
+    <div class="scenique-point reveal reveal-delay-3">
+      <div class="scenique-icon">04</div>
+      <div class="scenique-content">
+        <h4><span class="fr">Sets hybrides live/effets</span><span class="en">Hybrid live/effects sets</span><span class="nl">Hybride live/effecten sets</span></h4>
+        <p><span class="fr">Vizion ne lance pas des morceaux. Il transforme, déconstruit et reconstruit la musique en temps réel — stems, chaînes d'effets, contrôleurs. Chaque set est une performance unique, irréproductible.</span><span class="en">Vizion doesn't play tracks. He transforms, deconstructs and reconstructs music in real time — stems, effects chains, controllers. Each set is a unique, unrepeatable performance.</span><span class="nl">Vizion lanceert geen nummers. Hij transformeert, deconstrueert en reconstrueert muziek in realtime — stems, effectenketens, controllers. Elke set is een unieke, onherhaalbare performance.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ŒIL SÉPARATEUR ─── -->
+<div class="eye-sep">
+  <img src="images/Oeil_Afro-futuriste_VIZION_OK.webp" alt="">
+</div>
+
+<!-- ─── 04 CASTING OUVERT ─── -->
+<!-- NOTE : ce chapitre sera retiré une fois le casting terminé -->
+<div class="casting-section">
+  <div class="sec-num-bg" style="z-index:1">04</div>
+
+  <div class="sec-label reveal">
+    <span class="fr">04 — Casting Ouvert</span>
+    <span class="en">04 — Open Casting</span>
+    <span class="nl">04 — Open Casting</span>
+  </div>
+  <h2 class="sec-title reveal">
+    <span class="fr">Des <span class="accent">Incarnations</span>,<br>pas des musiciens de session</span>
+    <span class="en"><span class="accent">Incarnations</span>,<br>not session musicians</span>
+    <span class="nl"><span class="accent">Incarnaties</span>,<br>geen sessiemuzikanten</span>
+  </h2>
+
+  <div class="casting-grid">
+    <div class="casting-card reveal reveal-delay-1" data-num="01">
+      <div class="casting-type">MC</div>
+      <div class="casting-title">
+        <span class="fr">L'Impact — Power MC</span>
+        <span class="en">The Impact — Power MC</span>
+        <span class="nl">De Impact — Power MC</span>
+      </div>
+      <p class="casting-desc">
+        <span class="fr">Voix perforante. Capacité à porter la fureur d'une foule. Discipline scénique absolue — l'esthétique du projet n'est pas négociable. Univers Soca, Ragga ou démarche hybride assumée.</span>
+        <span class="en">Piercing voice. Ability to carry crowd fury. Absolute stage discipline — the project's aesthetic is non-negotiable. Soca, Ragga or assumed hybrid approach.</span>
+        <span class="nl">Doordringende stem. Capaciteit om de woede van een menigte te dragen. Absolute podiumdiscipline — de esthetiek is niet onderhandelbaar.</span>
+      </p>
+      <div class="casting-tags">
+        <span class="ctag">MC</span><span class="ctag">Power</span><span class="ctag">Soca</span><span class="ctag">Ragga</span>
+      </div>
+    </div>
+
+    <div class="casting-card reveal reveal-delay-2" data-num="02">
+      <div class="casting-type">MC</div>
+      <div class="casting-title">
+        <span class="fr">La Précision — Fast Flow MC</span>
+        <span class="en">The Precision — Fast Flow MC</span>
+        <span class="nl">De Precisie — Fast Flow MC</span>
+      </div>
+      <p class="casting-desc">
+        <span class="fr">Flows millimétrés, technique irréprochable. Capacité à s'insérer comme une pièce mécanique dans une rythmique électronique froide et précise. L'exactitude avant la démonstration.</span>
+        <span class="en">Precision flows, flawless technique. Ability to fit like a mechanical part into a cold, precise electronic rhythm. Exactness before showmanship.</span>
+        <span class="nl">Nauwkeurige flows, onberispelijke techniek. Als een mechanisch onderdeel in het koude, precieze elektronische ritme passen.</span>
+      </p>
+      <div class="casting-tags">
+        <span class="ctag">MC</span><span class="ctag">Fast Flow</span><span class="ctag">Technique</span><span class="ctag">Melodic Techno</span>
+      </div>
+    </div>
+
+    <div class="casting-card reveal reveal-delay-3" data-num="03">
+      <div class="casting-type">MC</div>
+      <div class="casting-title">
+        <span class="fr">La Profondeur — Mystic MC</span>
+        <span class="en">The Depth — Mystic MC</span>
+        <span class="nl">De Diepte — Mystic MC</span>
+      </div>
+      <p class="casting-desc">
+        <span class="fr">Voix grave, résonance Dub, présence sacrée. Il donne au chaos son sens et sa profondeur. Ancrage roots, soul ou spirituel. La gravité qui fait tenir l'ensemble.</span>
+        <span class="en">Deep voice, Dub resonance, sacred presence. He gives chaos its meaning and depth. Roots, soul or spiritual grounding. The gravity that holds it all.</span>
+        <span class="nl">Diepe stem, Dub-resonantie, heilige aanwezigheid. Roots, soul of spirituele verankering. De zwaartekracht die alles bijeenhoudt.</span>
+      </p>
+      <div class="casting-tags">
+        <span class="ctag">MC</span><span class="ctag">Dub</span><span class="ctag">Roots</span><span class="ctag">Deep</span>
+      </div>
+    </div>
+
+    <div class="casting-card casting-card-wide reveal" data-num="04">
+      <div>
+        <div class="casting-type">
+          <span class="fr">Module additionnel</span>
+          <span class="en">Additional module</span>
+          <span class="nl">Aanvullende module</span>
+        </div>
+        <div class="casting-title">
+          <span class="fr">L'Escouade<br>Cyber-Afro-Caribéenne</span>
+          <span class="en">The Cyber-Afro-Caribbean<br>Squad</span>
+          <span class="nl">De Cyber-Afro-Caribische<br>Escouade</span>
+        </div>
+        <div class="casting-tags">
+          <span class="ctag">2–4 membres</span>
+          <span class="ctag">Danse</span>
+          <span class="ctag">Activation</span>
+          <span class="ctag">Cyber-Afro-Caribéen</span>
+        </div>
+      </div>
+      <p class="casting-desc" style="padding-top:.5rem;">
+        <span class="fr">2 à 4 Meneuses de Transe. Elles matérialisent les fréquences froides par des mouvements robotiques et activent la foule par une énergie physique impérieuse. Le casting exige la maîtrise du contraste : mouvements mécaniques précis (Melodic Techno) et activation sauvage (Soca). Look "Cyber-Afro-Caribéen" — esthétique radicale, pas de compromis.</span>
+        <span class="en">2 to 4 Trance Leaders. They materialize cold frequencies through robotic movements and activate the crowd with imperious physical energy. Mastery of contrast required: precise mechanical movements (Melodic Techno) and wild activation (Soca). "Cyber-Afro-Caribbean" look — radical aesthetic, no compromise.</span>
+        <span class="nl">2 tot 4 Trance-leiders. Ze materialiseren koude frequenties door robotbewegingen en activeren de menigte. Beheersing van contrast vereist: precieze mechanische bewegingen (Melodic Techno) en wilde activering (Soca). Radicale esthetiek, geen compromis.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Formulaire casting -->
+  <div class="form-casting reveal">
+    <div>
+      <div class="form-intro-label">
+        <span class="fr">Candidature</span>
+        <span class="en">Application</span>
+        <span class="nl">Kandidatuur</span>
+      </div>
+      <h3 class="form-intro-title">
+        <span class="fr">Rejoindre <span class="accent">le Chaos</span></span>
+        <span class="en">Join <span class="accent">the Chaos</span></span>
+        <span class="nl">Sluit je aan bij <span class="accent">de Chaos</span></span>
+      </h3>
+      <p class="form-intro-body">
+        <span class="fr">Envoyez vos références et liens. Nous répondons à toutes les candidatures sérieuses.</span>
+        <span class="en">Send your references and links. We respond to all serious applications.</span>
+        <span class="nl">Stuur uw referenties en links. We reageren op alle serieuze kandidaturen.</span>
+      </p>
+    </div>
+    <div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="fr">Nom / Prénom</span>
+            <span class="en">Name</span>
+            <span class="nl">Naam</span>
+          </label>
+          <input type="text" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="fr">Profil</span>
+            <span class="en">Profile</span>
+            <span class="nl">Profiel</span>
+          </label>
+          <select class="form-select">
+            <option value="" disabled selected>—</option>
+            <option value="mc-power">MC / Power</option>
+            <option value="mc-flow">MC / Fast Flow</option>
+            <option value="mc-mystic">MC / Mystic</option>
+            <option value="danse">
+              <span class="fr">Danseuse-animatrice</span>
+              <span class="en">Dancer-performer</span>
+              <span class="nl">Danser-animatrice</span>
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Liens (SoundCloud, YouTube, Instagram…)</span>
+          <span class="en">Links (SoundCloud, YouTube, Instagram…)</span>
+          <span class="nl">Links (SoundCloud, YouTube, Instagram…)</span>
+        </label>
+        <input type="text" class="form-input">
+      </div>
+
+      <button type="button" class="btn-submit">
+        <span class="fr">Envoyer →</span>
+        <span class="en">Send →</span>
+        <span class="nl">Verzenden →</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <a href="index.html"><img src="images/logo_dj_vizion.webp" alt="DJ VIZION"></a>
+  <div class="footer-links">
+    <a href="projets.html">
+      <span class="fr">← Projets</span>
+      <span class="en">← Projects</span>
+      <span class="nl">← Projecten</span>
+    </a>
+    <a href="collaborer.html">
+      <span class="fr">Collaborer</span>
+      <span class="en">Collaborate</span>
+      <span class="nl">Samenwerken</span>
+    </a>
+    <a href="booking.html">Booking</a>
+  </div>
+  <span class="footer-copy">CHAOS UNIT — 2025</span>
+</footer>
+
+<script>
+/* ── Lang ── */
+function setLang(lang, btn) {
+  document.body.className = 'lang-' + lang;
+  localStorage.setItem('djvizion-lang', lang);
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === lang));
+}
+const saved = localStorage.getItem('djvizion-lang');
+if (saved) {
+  document.body.className = 'lang-' + saved;
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === saved));
+}
+
+/* ── Hamburger ── */
+const menu = document.getElementById('mobileMenu');
+const burger = document.getElementById('hamburger');
+function toggleMenu() {
+  const open = menu.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMenu() {
+  menu.classList.remove('open');
+  burger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Scroll reveal ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

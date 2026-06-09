@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJ VIZION — Booking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & ROOT ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:        #070A09;
+  --bg2:       #0D1410;
+  --bg-purple: #0F0A1E;
+  --violet:    #9660E8;
+  --violet-lo: rgba(150,96,232,.18);
+  --green:     #4A8A5C;
+  --green-lo:  rgba(74,138,92,.18);
+  --ochre:     #C8960A;
+  --light:     #EDE6DA;
+  --muted:     rgba(237,230,218,.45);
+  --border:    rgba(237,230,218,.07);
+  --border-v:  rgba(150,96,232,.25);
+  --border-g:  rgba(74,138,92,.25);
+}
+
+body {
+  background: var(--bg);
+  color: var(--light);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN ── */
+body::after {
+  content: ''; position: fixed; inset: 0;
+  pointer-events: none; z-index: 999; opacity: .032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 220px;
+}
+
+
+/* ── SCAN-LINES ── */
+body::before {
+  content: ''; position: fixed; inset: 0;
+  pointer-events: none; z-index: 997;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0px, transparent 3px,
+    rgba(150,96,232,.018) 3px, rgba(150,96,232,.018) 4px
+  );
+}
+
+/* ── LANG ── */
+.fr, .en, .nl { display: none; }
+body.lang-fr .fr { display: inline; }
+body.lang-en .en { display: inline; }
+body.lang-nl .nl { display: inline; }
+
+/* ─────────────────────────────────── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  padding: .8rem 2.8rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(7,10,9,.97);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo img { height: 68px; width: auto; display: block; }
+.nav-center { display: flex; align-items: center; gap: 2rem; }
+.nav-center a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.nav-center a:hover { color: var(--light); }
+.nav-right { display: flex; align-items: center; gap: 1.2rem; }
+.lang-switch { display: flex; gap: .3rem; }
+.lang-switch button {
+  background: none; border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .25rem .4rem; transition: color .2s;
+}
+.lang-switch button:hover, .lang-switch button.active { color: var(--violet); }
+.nav-booking {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--bg); background: var(--violet);
+  text-decoration: none; padding: .5rem 1.2rem; transition: background .2s;
+}
+.nav-booking:hover, .nav-booking.active-page { background: #b07ef0; }
+
+/* ── HAMBURGER ── */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: .4rem;
+}
+.hamburger span {
+  display: block; width: 24px; height: 1.5px;
+  background: var(--light); transition: transform .3s, opacity .3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 190;
+  background: rgba(7,10,9,.97);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2.5rem; transform: translateX(100%);
+  transition: transform .4s cubic-bezier(.77,0,.175,1);
+}
+.mobile-menu.open { transform: translateX(0); }
+.mobile-menu a {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem,8vw,3rem); font-weight: 700;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; letter-spacing: .05em; transition: color .2s;
+}
+.mobile-menu a:hover { color: var(--violet); }
+.mobile-menu .mobile-booking {
+  font-size: 1rem; color: var(--bg); background: var(--violet);
+  padding: .7rem 2.2rem; letter-spacing: .1em;
+}
+.mobile-lang { display: flex; gap: 1.2rem; margin-top: 1rem; }
+.mobile-lang button {
+  background: none; border: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: .15em;
+  color: var(--muted); cursor: pointer; padding: .4rem .9rem; transition: all .2s;
+}
+.mobile-lang button:hover, .mobile-lang button.active { color: var(--violet); border-color: var(--border-v); }
+
+/* ─────────────────────────────── PAGE HEADER ─── */
+.page-header {
+  padding: 9rem 3rem 4rem;
+  position: relative; overflow: hidden;
+  opacity: 0; animation: fadeUp .7s .2s forwards;
+}
+.page-header::before {
+  content: '';
+  position: absolute; top: -60px; right: -80px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(100,40,180,.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+.page-header::after {
+  content: '';
+  position: absolute; bottom: -60px; left: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(46,90,52,.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.header-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 1.2rem; position: relative; z-index: 2;
+}
+.page-header h1 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(5rem, 14vw, 13rem);
+  text-transform: uppercase; line-height: .85; letter-spacing: -.04em;
+  position: relative; z-index: 2;
+}
+.page-header h1 .accent { color: var(--violet); }
+.page-header-sub {
+  font-family: 'DM Sans', sans-serif; font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: var(--muted); line-height: 1.7;
+  margin-top: 2rem; max-width: 600px; position: relative; z-index: 2;
+}
+
+/* ─────────────────────────────── DIVIDER ─── */
+.divider {
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%, var(--border-v) 30%,
+    var(--border-g) 70%, transparent 100%);
+  opacity: .5;
+}
+
+/* ─────────────────────────────── INTRO ─── */
+.intro-section {
+  max-width: 1200px; margin: 0 auto;
+  padding: 5rem 3rem;
+}
+.intro-top {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6rem; align-items: start;
+  margin-bottom: 4rem; padding-bottom: 4rem;
+  border-bottom: 1px solid var(--border);
+}
+.intro-lead {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 300;
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+  line-height: 1.5; color: var(--light);
+}
+.intro-lead strong { color: var(--violet); font-weight: 700; }
+.intro-right p {
+  font-size: .95rem; line-height: 1.9;
+  color: rgba(237,230,218,.62); margin-bottom: 1rem;
+}
+.intro-right p:last-child { margin-bottom: 0; }
+
+/* ─────────────────────────────── FORMATS ─── */
+.formats-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .25em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: .8rem;
+}
+.formats-eyebrow::after { content: ''; width: 40px; height: 1px; background: var(--border); }
+
+.formats-grid {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 1px;
+  background: var(--border);
+}
+.format-card {
+  background: var(--bg2);
+  padding: 2rem 1.8rem;
+  position: relative; overflow: hidden;
+  transition: background .3s;
+}
+.format-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--violet);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .35s ease;
+}
+.format-card:hover { background: #111714; }
+.format-card:hover::before { transform: scaleX(1); }
+
+/* Bloom au hover */
+.format-card::after {
+  content: ''; position: absolute;
+  top: -40px; right: -40px; width: 160px; height: 160px;
+  background: radial-gradient(circle, var(--violet-lo) 0%, transparent 70%);
+  opacity: 0; transition: opacity .4s; pointer-events: none;
+}
+.format-card:hover::after { opacity: 1; }
+
+.format-num {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 3.5rem; line-height: 1;
+  color: var(--violet); opacity: .12;
+  margin-bottom: .6rem;
+}
+.format-name {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: 1rem; letter-spacing: .02em; text-transform: uppercase;
+  color: var(--light); margin-bottom: .6rem;
+}
+.format-desc {
+  font-size: .9rem; line-height: 1.8;
+  color: rgba(237,230,218,.55);
+}
+
+/* ─────────────────────────────── FORM SECTION ─── */
+.form-section {
+  background: var(--bg-purple);
+  border-top: 1px solid var(--border-v);
+  border-bottom: 1px solid var(--border-v);
+  position: relative; overflow: hidden;
+}
+.form-section::before {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(100,40,180,.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.form-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 5rem 3rem;
+  display: grid; grid-template-columns: 1fr 1.5fr;
+  gap: 6rem; align-items: start;
+  position: relative; z-index: 2;
+}
+
+/* Form aside */
+.form-aside { position: sticky; top: 120px; }
+
+.aside-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: .25em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1rem;
+  display: flex; align-items: center; gap: .8rem;
+}
+.aside-eyebrow::after { content: ''; width: 30px; height: 1px; background: var(--border); }
+
+.form-aside h2 {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+  text-transform: uppercase; letter-spacing: -.02em; line-height: 1.05;
+  color: var(--light); margin-bottom: 1.5rem;
+}
+.form-aside h2 .accent { color: var(--violet); }
+
+.form-aside p {
+  font-size: .95rem; line-height: 1.9;
+  color: rgba(237,230,218,.6); margin-bottom: 1rem;
+}
+.form-aside p:last-of-type { margin-bottom: 0; }
+
+.aside-note {
+  margin-top: 2.5rem; padding: 1.4rem 1.6rem;
+  border-left: 2px solid var(--violet);
+  background: rgba(150,96,232,.07);
+}
+.aside-note strong {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--violet); display: block; margin-bottom: .4rem;
+}
+.aside-note p {
+  font-size: .85rem; color: rgba(237,230,218,.55);
+  line-height: 1.7; margin: 0;
+}
+
+/* Œil déco */
+.aside-eye {
+  width: 220px; opacity: .72; margin-top: 3rem;
+  filter: sepia(1) saturate(2.2) hue-rotate(5deg) brightness(1.1)
+          drop-shadow(0 0 12px rgba(200,150,10,.5))
+          drop-shadow(0 0 28px rgba(200,150,10,.25));
+}
+
+/* Booking form */
+.booking-form { display: flex; flex-direction: column; gap: 1.3rem; }
+
+.form-group { display: flex; flex-direction: column; gap: .45rem; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.form-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--violet); display: flex; align-items: center; gap: .6rem;
+}
+.form-optional {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px; letter-spacing: .1em;
+  color: var(--muted); font-style: italic;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  background: rgba(150,96,232,.04);
+  border: 1px solid var(--border-v);
+  color: var(--light);
+  font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 300;
+  padding: .9rem 1.1rem; outline: none;
+  transition: border-color .2s, background .2s;
+  appearance: none;
+}
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: rgba(150,96,232,.55);
+  background: rgba(150,96,232,.07);
+}
+.form-input::placeholder { color: rgba(237,230,218,.2); }
+.form-textarea { min-height: 130px; resize: vertical; }
+.form-select option { background: #0a0d18; color: var(--light); }
+
+.form-separator {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); padding: .8rem 0 .3rem;
+  border-top: 1px solid var(--border);
+  margin-top: .2rem;
+}
+
+.btn-submit {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--bg); background: var(--violet);
+  border: none; cursor: pointer; padding: 1.1rem 2.5rem;
+  margin-top: .5rem; display: inline-block; align-self: flex-start;
+  transition: background .2s, transform .15s;
+}
+.btn-submit:hover { background: #b07ef0; transform: translateY(-2px); }
+
+
+/* ── BLOOMS & NUMÉROS DÉCORATIFS ── */
+.sec-bloom {
+  position: absolute; top: -80px; right: -80px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(150,96,232,.07) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.sec-bloom-l {
+  position: absolute; bottom: -80px; left: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(150,96,232,.045) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+.sec-num-bg {
+  position: absolute; top: -.1em; right: -.05em;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(7rem, 18vw, 15rem);
+  line-height: 1; opacity: .025; color: var(--light);
+  pointer-events: none; user-select: none; z-index: 0;
+  letter-spacing: -.04em;
+}
+
+/* ─────────────────────────────── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: var(--bg);
+}
+footer img { height: 32px; width: auto; opacity: .45; }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.footer-links a:hover { color: var(--violet); }
+.footer-copy { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .12em; color: var(--muted); }
+
+/* ─────────────────────────────── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: .12s; }
+.reveal-delay-2 { transition-delay: .24s; }
+.reveal-delay-3 { transition-delay: .36s; }
+.reveal-delay-4 { transition-delay: .48s; }
+
+/* ─────────────────────────────── RESPONSIVE ─── */
+@media (max-width: 960px) {
+  .nav-center { display: none; }
+  .hamburger  { display: flex; }
+  .nav-booking { display: none; }
+}
+@media (max-width: 900px) {
+  .intro-top { grid-template-columns: 1fr; gap: 2.5rem; }
+  .formats-grid { grid-template-columns: 1fr 1fr; }
+  .form-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .form-aside { position: static; }
+  .aside-eye { display: none; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .page-header { padding: 8rem 1.5rem 3rem; }
+  .intro-section { padding: 4rem 1.5rem; }
+  .form-inner { padding: 4rem 1.5rem; }
+  .formats-grid { grid-template-columns: 1fr; }
+  .form-row-2 { grid-template-columns: 1fr; }
+  footer { flex-direction: column; text-align: center; gap: .8rem; }
+  .footer-right { text-align: center; }
+}
+</style>
+</head>
+<body class="lang-fr">
+
+<!-- ─── MOBILE MENU ─── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">
+    <span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span>
+  </a>
+  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="projets.html" onclick="closeMenu()">
+    <span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span>
+  </a>
+  <a href="collaborer.html" onclick="closeMenu()">
+    <span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span>
+  </a>
+  <a href="booking.html" class="mobile-booking" onclick="closeMenu()">Booking</a>
+  <div class="mobile-lang">
+    <button onclick="setLang('fr',this)">FR</button>
+    <button onclick="setLang('en',this)">EN</button>
+    <button onclick="setLang('nl',this)">NL</button>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo_dj_vizion.webp" alt="DJ VIZION">
+  </a>
+  <div class="nav-center">
+    <a href="index.html"><span class="fr">Accueil</span><span class="en">Home</span><span class="nl">Home</span></a>
+    <a href="about.html">About</a>
+    <a href="projets.html"><span class="fr">Projets</span><span class="en">Projects</span><span class="nl">Projecten</span></a>
+    <a href="collaborer.html"><span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span></a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button onclick="setLang('fr',this)" class="active">FR</button>
+      <button onclick="setLang('en',this)">EN</button>
+      <button onclick="setLang('nl',this)">NL</button>
+    </div>
+    <a href="booking.html" class="nav-booking active-page">Booking</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── PAGE HEADER ─── -->
+<div class="page-header">
+  <div class="page-num-bg" style="position:absolute;bottom:-.5em;right:-.02em;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(8rem,22vw,18rem);line-height:1;opacity:.025;color:#EDE6DA;pointer-events:none;user-select:none;letter-spacing:-.04em;">B</div>
+  <div class="header-eyebrow">// DJ VIZION — Belgique &amp; international</div>
+  <h1>Boo<span class="accent">king</span></h1>
+  <p class="page-header-sub">
+    <span class="fr">Festivals, salles, centres culturels, événements privés — en Belgique et à l'international. Toute demande reçoit une réponse sous 48h.</span>
+    <span class="en">Festivals, venues, cultural centres, private events — in Belgium and internationally. All enquiries receive a response within 48 hours.</span>
+    <span class="nl">Festivals, zalen, culturele centra, privé-evenementen — in België en internationaal. Alle aanvragen ontvangen binnen 48 uur een antwoord.</span>
+  </p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ─── INTRO + FORMATS ─── -->
+<div class="intro-section" style="position:relative;overflow:hidden;">
+  <div class="sec-bloom"></div>
+  <div class="sec-num-bg">01</div>
+  <div class="intro-top reveal">
+    <div>
+      <p class="intro-lead">
+        <span class="fr">DJ VIZION est disponible pour festivals, salles de concert, centres culturels et événements privés en Belgique et à <strong>l'international</strong>.</span>
+        <span class="en">DJ VIZION is available for festivals, concert halls, cultural centres and private events in Belgium and <strong>internationally</strong>.</span>
+        <span class="nl">DJ VIZION is beschikbaar voor festivals, concertzalen, culturele centra en privé-evenementen in België en <strong>internationaal</strong>.</span>
+      </p>
+    </div>
+    <div class="intro-right">
+      <p>
+        <span class="fr">Pour toute demande de booking, merci de remplir le formulaire ci-dessous. Une réponse vous sera adressée dans les 48h. Précisez votre contexte, votre date et votre budget indicatif — cela permet une réponse rapide et adaptée.</span>
+        <span class="en">For any booking enquiry, please fill in the form below. A response will be sent within 48 hours. Specify your context, date and indicative budget — this allows for a fast and tailored response.</span>
+        <span class="nl">Voor elke boekingsaanvraag kunt u het onderstaande formulier invullen. U ontvangt binnen 48 uur een antwoord. Geef uw context, datum en indicatief budget op — dit zorgt voor een snelle en aangepaste reactie.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- FORMATS -->
+  <div class="formats-eyebrow reveal">
+    <span class="fr">Formules disponibles</span>
+    <span class="en">Available formats</span>
+    <span class="nl">Beschikbare formules</span>
+  </div>
+
+  <div class="formats-grid">
+    <div class="format-card reveal reveal-delay-1">
+      <div class="format-num">01</div>
+      <div class="format-name">The Live Experience</div>
+      <p class="format-desc">
+        <span class="fr">Sista MIKA &amp; DJ VIZION — le show complet, 4 artistes sur scène. Reggae, 45 à 75 min. DJ VIZION en sets hybrides live/effets.</span>
+        <span class="en">Sista MIKA &amp; DJ VIZION — the full show, 4 artists on stage. Reggae, 45 to 75 min. DJ VIZION delivering hybrid live/effects sets.</span>
+        <span class="nl">Sista MIKA &amp; DJ VIZION — de volledige show, 4 artiesten op scène. Reggae, 45 tot 75 min. DJ VIZION met hybride live/effecten sets.</span>
+      </p>
+    </div>
+    <div class="format-card reveal reveal-delay-2">
+      <div class="format-num">02</div>
+      <div class="format-name">
+        <span class="fr">Format Carte Blanche</span>
+        <span class="en">Carte Blanche Format</span>
+        <span class="nl">Carte Blanche Formaat</span>
+      </div>
+      <p class="format-desc">
+        <span class="fr">DJ VIZION en sets hybrides live/effets + artistes sélectionnés selon le contexte — locaux, proposés par le festival, ou scène ouverte encadrée.</span>
+        <span class="en">DJ VIZION delivering hybrid live/effects sets + artists selected according to context — local, proposed by the festival, or guided open stage.</span>
+        <span class="nl">DJ VIZION met hybride live/effecten sets + artiesten geselecteerd volgens de context — lokaal, voorgesteld door het festival, of begeleide open podium.</span>
+      </p>
+    </div>
+    <div class="format-card reveal reveal-delay-3">
+      <div class="format-num">03</div>
+      <div class="format-name">
+        <span class="fr">Résidence Courte</span>
+        <span class="en">Short Residency</span>
+        <span class="nl">Korte Residentie</span>
+      </div>
+      <p class="format-desc">
+        <span class="fr">Workshop ou masterclass en journée + performance le soir. Idéal pour centres culturels et festivals avec volet pédagogique.</span>
+        <span class="en">Daytime workshop or masterclass + evening performance. Ideal for cultural centres and festivals with an educational component.</span>
+        <span class="nl">Workshop of masterclass overdag + avondperformance. Ideaal voor culturele centra en festivals met een educatieve component.</span>
+      </p>
+    </div>
+    <div class="format-card reveal reveal-delay-4">
+      <div class="format-num">04</div>
+      <div class="format-name">
+        <span class="fr">First Act / Warm-up Premium</span>
+        <span class="en">First Act / Premium Warm-up</span>
+        <span class="nl">First Act / Premium Warm-up</span>
+      </div>
+      <p class="format-desc">
+        <span class="fr">Configuration légère pour ouvrir une tête d'affiche. Accessible budgétairement, impact garanti.</span>
+        <span class="en">Lightweight configuration to open for a headliner. Budget-friendly, guaranteed impact.</span>
+        <span class="nl">Lichte configuratie om een headliner te openen. Budgetvriendelijk, gegarandeerde impact.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ─── FORMULAIRE ─── -->
+<div class="form-section" style="position:relative;">
+  <div class="sec-bloom-l"></div>
+  <div class="sec-num-bg">02</div>
+  <div class="form-inner">
+
+    <!-- Aside -->
+    <div class="form-aside reveal">
+      <div class="aside-eyebrow">
+        <span class="fr">Demande de date</span>
+        <span class="en">Date enquiry</span>
+        <span class="nl">Datumaanvraag</span>
+      </div>
+      <h2>
+        <span class="fr">Votre <span class="accent">demande</span></span>
+        <span class="en">Your <span class="accent">enquiry</span></span>
+        <span class="nl">Uw <span class="accent">aanvraag</span></span>
+      </h2>
+      <p>
+        <span class="fr">Précisez votre contexte, votre date et votre budget indicatif — cela permet une réponse rapide et adaptée.</span>
+        <span class="en">Specify your context, date and indicative budget — this allows for a fast and tailored response.</span>
+        <span class="nl">Geef uw context, datum en indicatief budget op — dit zorgt voor een snelle en aangepaste reactie.</span>
+      </p>
+      <div class="aside-note">
+        <strong>
+          <span class="fr">Délai de réponse</span>
+          <span class="en">Response time</span>
+          <span class="nl">Reactietijd</span>
+        </strong>
+        <p>
+          <span class="fr">Toute demande reçoit une réponse sous 48h.</span>
+          <span class="en">All enquiries receive a response within 48 hours.</span>
+          <span class="nl">Alle aanvragen ontvangen binnen 48 uur een antwoord.</span>
+        </p>
+      </div>
+      <img src="images/Oeil_Afro-futuriste_VIZION_OK.webp" alt="" class="aside-eye" aria-hidden="true">
+    </div>
+
+    <!-- Form -->
+    <div class="booking-form reveal reveal-delay-1">
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="fr">Nom</span><span class="en">Last name</span><span class="nl">Naam</span>
+          </label>
+          <input type="text" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="fr">Prénom</span><span class="en">First name</span><span class="nl">Voornaam</span>
+          </label>
+          <input type="text" class="form-input">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Organisation / Structure</span>
+          <span class="en">Organisation / Structure</span>
+          <span class="nl">Organisatie / Structuur</span>
+        </label>
+        <input type="text" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input">
+      </div>
+
+      <div class="form-separator">
+        <span class="fr">Votre demande</span>
+        <span class="en">Your enquiry</span>
+        <span class="nl">Uw aanvraag</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Projet</span>
+          <span class="en">Project</span>
+          <span class="nl">Project</span>
+        </label>
+        <select class="form-select">
+          <option value="" disabled selected>—</option>
+          <option value="live-experience">Sista MIKA &amp; DJ VIZION — The Live Experience</option>
+          <option value="autre">
+            <span class="fr">Autre / À discuter</span>
+            <span class="en">Other / To discuss</span>
+            <span class="nl">Ander / Te bespreken</span>
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Type d'événement</span>
+          <span class="en">Event type</span>
+          <span class="nl">Type evenement</span>
+        </label>
+        <select class="form-select">
+          <option value="" disabled selected>—</option>
+          <option value="festival">Festival</option>
+          <option value="club">Club</option>
+          <option value="salle">
+            <span class="fr">Salle de concert</span>
+            <span class="en">Concert hall</span>
+            <span class="nl">Concertzaal</span>
+          </option>
+          <option value="culturel">
+            <span class="fr">Centre culturel</span>
+            <span class="en">Cultural centre</span>
+            <span class="nl">Cultureel centrum</span>
+          </option>
+          <option value="prive">
+            <span class="fr">Événement privé</span>
+            <span class="en">Private event</span>
+            <span class="nl">Privé-evenement</span>
+          </option>
+        </select>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="fr">Date envisagée</span>
+            <span class="en">Planned date</span>
+            <span class="nl">Geplande datum</span>
+          </label>
+          <input type="date" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="fr">Lieu / Pays</span>
+            <span class="en">Venue / Country</span>
+            <span class="nl">Locatie / Land</span>
+          </label>
+          <input type="text" class="form-input">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Budget indicatif</span>
+          <span class="en">Indicative budget</span>
+          <span class="nl">Indicatief budget</span>
+          <span class="form-optional">
+            <span class="fr">— optionnel</span>
+            <span class="en">— optional</span>
+            <span class="nl">— optioneel</span>
+          </span>
+        </label>
+        <input type="text" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <span class="fr">Message libre</span>
+          <span class="en">Free message</span>
+          <span class="nl">Vrij bericht</span>
+        </label>
+        <textarea class="form-textarea"></textarea>
+      </div>
+
+      <button type="button" class="btn-submit">
+        <span class="fr">Envoyer la demande →</span>
+        <span class="en">Send enquiry →</span>
+        <span class="nl">Aanvraag verzenden →</span>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <a href="index.html"><img src="images/logo_dj_vizion.webp" alt="DJ VIZION"></a>
+  <div class="footer-links">
+    <a href="projets.html">
+      <span class="fr">← Projets</span><span class="en">← Projects</span><span class="nl">← Projecten</span>
+    </a>
+    <a href="the-live-experience.html">Live Experience</a>
+    <a href="collaborer.html">
+      <span class="fr">Collaborer</span><span class="en">Collaborate</span><span class="nl">Samenwerken</span>
+    </a>
+  </div>
+  <span class="footer-copy">© 2025 DJ VIZION</span>
+</footer>
+
+<script>
+/* ── Lang ── */
+function setLang(lang, btn) {
+  document.body.className = 'lang-' + lang;
+  localStorage.setItem('djvizion-lang', lang);
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === lang));
+}
+const saved = localStorage.getItem('djvizion-lang');
+if (saved) {
+  document.body.className = 'lang-' + saved;
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === saved));
+}
+
+/* ── Hamburger ── */
+const menu = document.getElementById('mobileMenu');
+const burger = document.getElementById('hamburger');
+function toggleMenu() {
+  const open = menu.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMenu() {
+  menu.classList.remove('open');
+  burger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Scroll reveal ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
