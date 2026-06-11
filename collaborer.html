@@ -823,7 +823,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
     <img src="images/Micro_stylise_afro-futuriste.webp" alt="" class="micro-deco" aria-hidden="true">
   </div>
 
-  <div class="form-wrap reveal reveal-delay-1">
+  <form class="form-wrap reveal reveal-delay-1" action="https://formspree.io/f/mojznyqg" method="POST">
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">
@@ -831,7 +831,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
           <span class="en">Name</span>
           <span class="nl">Naam</span>
         </label>
-        <input type="text" class="form-input">
+        <input type="text" name="nom" class="form-input">
       </div>
       <div class="form-group">
         <label class="form-label">
@@ -839,7 +839,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
           <span class="en">Profile</span>
           <span class="nl">Profiel</span>
         </label>
-        <select class="form-select">
+        <select name="profil" class="form-select">
           <option value="" disabled selected>—</option>
           <option value="mc-power">CHAOS UNIT — MC / Power</option>
           <option value="mc-flow">CHAOS UNIT — MC / Fast Flow</option>
@@ -852,7 +852,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
     </div>
     <div class="form-group">
       <label class="form-label">Email</label>
-      <input type="email" class="form-input">
+      <input type="email" name="email" class="form-input">
     </div>
     <div class="form-group">
       <label class="form-label">
@@ -860,15 +860,15 @@ footer img { height: 32px; width: auto; opacity: .45; }
         <span class="en">Musical references (links)</span>
         <span class="nl">Muzikale referenties (links)</span>
       </label>
-      <input type="text" class="form-input">
+      <input type="text" name="references" class="form-input">
     </div>
 
-    <button type="button" class="btn-submit">
+    <button type="submit" class="btn-submit">
       <span class="fr">Envoyer →</span>
       <span class="en">Send →</span>
       <span class="nl">Verzenden →</span>
     </button>
-  </div>
+  </form>
 </div>
 
 <!-- ─── FOOTER ─── -->

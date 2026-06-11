@@ -648,20 +648,20 @@ footer img { height: 32px; width: auto; opacity: .45; }
     </div>
 
     <!-- Form -->
-    <div class="booking-form reveal reveal-delay-1">
+    <form class="booking-form reveal reveal-delay-1" action="https://formspree.io/f/xdavlynw" method="POST">
 
       <div class="form-row-2">
         <div class="form-group">
           <label class="form-label">
             <span class="fr">Nom</span><span class="en">Last name</span><span class="nl">Naam</span>
           </label>
-          <input type="text" class="form-input">
+          <input type="text" name="nom" class="form-input">
         </div>
         <div class="form-group">
           <label class="form-label">
             <span class="fr">Prénom</span><span class="en">First name</span><span class="nl">Voornaam</span>
           </label>
-          <input type="text" class="form-input">
+          <input type="text" name="prenom" class="form-input">
         </div>
       </div>
 
@@ -671,12 +671,12 @@ footer img { height: 32px; width: auto; opacity: .45; }
           <span class="en">Organisation / Structure</span>
           <span class="nl">Organisatie / Structuur</span>
         </label>
-        <input type="text" class="form-input">
+        <input type="text" name="organisation" class="form-input">
       </div>
 
       <div class="form-group">
         <label class="form-label">Email</label>
-        <input type="email" class="form-input">
+        <input type="email" name="email" class="form-input">
       </div>
 
       <div class="form-separator">
@@ -691,7 +691,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
           <span class="en">Project</span>
           <span class="nl">Project</span>
         </label>
-        <select class="form-select">
+        <select name="projet" class="form-select">
           <option value="" disabled selected>—</option>
           <option value="live-experience">Sista MIKA &amp; DJ VIZION — The Live Experience</option>
           <option value="autre">
@@ -708,7 +708,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
           <span class="en">Event type</span>
           <span class="nl">Type evenement</span>
         </label>
-        <select class="form-select">
+        <select name="type_evenement" class="form-select">
           <option value="" disabled selected>—</option>
           <option value="festival">Festival</option>
           <option value="club">Club</option>
@@ -737,7 +737,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
             <span class="en">Planned date</span>
             <span class="nl">Geplande datum</span>
           </label>
-          <input type="date" class="form-input">
+          <input type="date" name="date" class="form-input">
         </div>
         <div class="form-group">
           <label class="form-label">
@@ -745,7 +745,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
             <span class="en">Venue / Country</span>
             <span class="nl">Locatie / Land</span>
           </label>
-          <input type="text" class="form-input">
+          <input type="text" name="lieu" class="form-input">
         </div>
       </div>
 
@@ -760,7 +760,7 @@ footer img { height: 32px; width: auto; opacity: .45; }
             <span class="nl">— optioneel</span>
           </span>
         </label>
-        <input type="text" class="form-input">
+        <input type="text" name="budget" class="form-input">
       </div>
 
       <div class="form-group">
@@ -769,16 +769,16 @@ footer img { height: 32px; width: auto; opacity: .45; }
           <span class="en">Free message</span>
           <span class="nl">Vrij bericht</span>
         </label>
-        <textarea class="form-textarea"></textarea>
+        <textarea name="message" class="form-textarea"></textarea>
       </div>
 
-      <button type="button" class="btn-submit">
+      <button type="submit" class="btn-submit">
         <span class="fr">Envoyer la demande →</span>
         <span class="en">Send enquiry →</span>
         <span class="nl">Aanvraag verzenden →</span>
       </button>
 
-    </div>
+    </form>
   </div>
 </div>
 
