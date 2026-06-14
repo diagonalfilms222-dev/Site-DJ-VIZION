@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJ VIZION — Mentions légales / Wettelijke vermeldingen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & ROOT ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:          #070A09;
+  --bg2:         #0D1410;
+  --violet:      #9660E8;
+  --violet-lo:   rgba(150, 96, 232, 0.18);
+  --violet-mid:  rgba(150, 96, 232, 0.35);
+  --green:       #4A8A5C;
+  --green-lo:    rgba(74, 138, 92, 0.18);
+  --ochre:       #C8960A;
+  --light:       #EDE6DA;
+  --muted:       rgba(237, 230, 218, 0.45);
+  --faint:       rgba(237, 230, 218, 0.12);
+  --border:      rgba(237, 230, 218, 0.07);
+  --border-v:    rgba(150, 96, 232, 0.25);
+}
+
+body {
+  background: var(--bg);
+  color: var(--light);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── LANG SYSTEM — FR/NL uniquement sur cette page ── */
+.fr, .nl { display: none; }
+body.lang-fr .fr { display: inline; }
+body.lang-nl .nl { display: inline; }
+body.lang-fr .fr.block, body.lang-nl .nl.block { display: block; }
+
+/* ── GRAIN TEXTURE ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: .032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 220px;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  padding: .8rem 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(7,10,9,.96) 0%, transparent 100%);
+  backdrop-filter: blur(3px);
+}
+
+.nav-logo img {
+  height: 68px;
+  width: auto;
+  display: block;
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-center a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+.nav-center a:hover, .nav-center a.active { color: var(--light); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.lang-switch {
+  display: flex;
+  gap: .3rem;
+}
+.lang-switch button {
+  background: none;
+  border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .15em;
+  color: var(--muted);
+  cursor: pointer;
+  padding: .25rem .4rem;
+  transition: color .2s;
+}
+.lang-switch button:hover, .lang-switch button.active { color: var(--violet); }
+
+.nav-booking {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--violet);
+  text-decoration: none;
+  padding: .5rem 1.2rem;
+  transition: background .2s;
+}
+.nav-booking:hover { background: #b07ef0; }
+
+/* ── HAMBURGER ── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: .4rem;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--light);
+  transition: transform .3s, opacity .3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ── MOBILE MENU ── */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  background: rgba(7, 10, 9, .97);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  transform: translateX(100%);
+  transition: transform .4s cubic-bezier(.77,0,.175,1);
+}
+.mobile-menu.open { transform: translateX(0); }
+
+.mobile-menu a {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: .05em;
+  transition: color .2s;
+}
+.mobile-menu a:hover { color: var(--violet); }
+
+.mobile-menu .mobile-booking {
+  font-size: 1rem;
+  color: var(--bg);
+  background: var(--violet);
+  padding: .7rem 2.2rem;
+  letter-spacing: .1em;
+}
+.mobile-menu .mobile-booking:hover { background: #b07ef0; color: var(--bg); }
+
+.mobile-lang {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+.mobile-lang button {
+  background: none;
+  border: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .15em;
+  color: var(--muted);
+  cursor: pointer;
+  padding: .4rem .9rem;
+  transition: all .2s;
+}
+.mobile-lang button:hover, .mobile-lang button.active {
+  color: var(--violet);
+  border-color: var(--border-v);
+}
+
+/* ── PAGE CONTENT ── */
+.legal-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 9rem 2rem 6rem;
+}
+
+.legal-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 1.2rem;
+}
+
+.legal-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+
+.legal-subtitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin-bottom: 3.5rem;
+}
+
+.legal-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 2.5rem 0;
+}
+
+.legal-section {
+  margin-bottom: 2.8rem;
+}
+
+.legal-section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 1.2rem;
+}
+
+.legal-section p,
+.legal-section li {
+  font-size: .95rem;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: .7rem;
+}
+
+.legal-section ul {
+  padding-left: 1.4rem;
+  margin-bottom: .7rem;
+}
+
+.legal-section a {
+  color: var(--violet);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-v);
+  transition: color .2s, border-color .2s;
+}
+.legal-section a:hover {
+  color: #b07ef0;
+  border-color: #b07ef0;
+}
+
+.legal-section strong {
+  color: var(--light);
+  font-weight: 400;
+}
+
+.legal-tag {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid rgba(74,138,92,.3);
+  padding: .2rem .6rem;
+  margin-bottom: 1.4rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg);
+}
+footer img { height: 32px; width: auto; opacity: .45; }
+.footer-copy {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .12em;
+  color: var(--muted);
+}
+.footer-right {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: var(--muted);
+  text-align: right;
+}
+.footer-right a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.footer-right a:hover {
+  color: var(--violet);
+  border-color: var(--border-v);
+}
+
+/* ── COOKIE BANNER ── */
+#cookie-banner {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(13, 20, 16, 0.97);
+  border-top: 1px solid var(--border-v);
+  backdrop-filter: blur(8px);
+  padding: 1rem 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  transform: translateY(100%);
+  transition: transform .4s cubic-bezier(.77,0,.175,1);
+}
+#cookie-banner.visible { transform: translateY(0); }
+
+#cookie-banner p {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+#cookie-ok {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--violet);
+  border: none;
+  padding: .5rem 1.4rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+#cookie-ok:hover { background: #b07ef0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .nav-center { display: none; }
+  .hamburger  { display: flex; }
+  .nav-booking { display: none; }
+}
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .legal-page { padding: 7rem 1.5rem 5rem; }
+  footer { flex-direction: column; text-align: center; gap: .8rem; }
+  .footer-right { text-align: center; }
+  #cookie-banner { flex-direction: column; align-items: flex-start; padding: 1.2rem 1.5rem; }
+}
+
+</style>
+</head>
+<body class="lang-fr">
+
+<!-- ── MOBILE MENU ── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="closeMenu()">
+    <span class="fr">Accueil</span><span class="nl">Home</span>
+  </a>
+  <a href="about.html" onclick="closeMenu()">
+    <span class="fr">About</span><span class="nl">About</span>
+  </a>
+  <a href="projets.html" onclick="closeMenu()">
+    <span class="fr">Projets</span><span class="nl">Projecten</span>
+  </a>
+  <a href="the-live-experience.html" onclick="closeMenu()">
+    <span class="fr">Live</span><span class="nl">Live</span>
+  </a>
+  <a href="collaborer.html" onclick="closeMenu()">
+    <span class="fr">Collaborer</span><span class="nl">Samenwerken</span>
+  </a>
+  <a href="booking.html" class="mobile-booking" onclick="closeMenu()">
+    <span class="fr">Booking</span><span class="nl">Booking</span>
+  </a>
+  <div class="mobile-lang">
+    <button onclick="setLang('fr')">FR</button>
+    <button onclick="setLang('nl')">NL</button>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="images/logo_dj_vizion.webp" alt="DJ VIZION">
+  </a>
+  <div class="nav-center">
+    <a href="about.html"><span class="fr">About</span><span class="nl">About</span></a>
+    <a href="projets.html"><span class="fr">Projets</span><span class="nl">Projecten</span></a>
+    <a href="the-live-experience.html"><span class="fr">The Live Experience</span><span class="nl">The Live Experience</span></a>
+    <a href="collaborer.html"><span class="fr">Collaborer</span><span class="nl">Samenwerken</span></a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button onclick="setLang('fr')">FR</button>
+      <button onclick="setLang('nl')">NL</button>
+    </div>
+    <a href="booking.html" class="nav-booking">
+      <span class="fr">Booking</span><span class="nl">Booking</span>
+    </a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<main class="legal-page">
+
+  <p class="legal-eyebrow">
+    <span class="fr">// Informations légales</span>
+    <span class="nl">// Juridische informatie</span>
+  </p>
+
+  <h1 class="legal-title">
+    <span class="fr">Mentions légales</span>
+    <span class="nl">Wettelijke<br>vermeldingen</span>
+  </h1>
+
+  <p class="legal-subtitle">
+    <span class="fr">djvizion.be — Dernière mise à jour : juin 2026</span>
+    <span class="nl">djvizion.be — Laatste update: juni 2026</span>
+  </p>
+
+  <!-- ─── 1. RESPONSABLE DE LA PUBLICATION ─── -->
+  <div class="legal-section">
+    <h2>
+      <span class="fr">1. Responsable de la publication</span>
+      <span class="nl">1. Verantwoordelijke voor de publicatie</span>
+    </h2>
+    <p>
+      <span class="fr"><strong>Isengo ITOTA BOKOKO</strong>, artiste opérant sous le nom DJ VIZION.<br>
+      Adresse : 1060 Bruxelles, Belgique.<br>
+      Contact : <a href="mailto:booking@djvizion.be">booking@djvizion.be</a></span>
+      <span class="nl"><strong>Isengo ITOTA BOKOKO</strong>, kunstenaar werkend onder de naam DJ VIZION.<br>
+      Adres: 1060 Brussel, België.<br>
+      Contact: <a href="mailto:booking@djvizion.be">booking@djvizion.be</a></span>
+    </p>
+    <p>
+      <span class="fr">Aucun numéro BCE n'est applicable à ce stade pour cette activité.</span>
+      <span class="nl">Er is op dit moment geen KBO-nummer van toepassing voor deze activiteit.</span>
+    </p>
+    <p id="wa-container"></p>
+  </div>
+
+  <div class="legal-divider"></div>
+
+  <!-- ─── 2. HÉBERGEMENT ─── -->
+  <div class="legal-section">
+    <h2>
+      <span class="fr">2. Hébergement</span>
+      <span class="nl">2. Hosting</span>
+    </h2>
+    <p>
+      <span class="fr"><strong>Site web :</strong> GitHub Pages — Microsoft Corporation, One Microsoft Way, Redmond, WA 98052, États-Unis.<br>
+      <a href="https://pages.github.com" target="_blank" rel="noopener">pages.github.com</a></span>
+      <span class="nl"><strong>Website:</strong> GitHub Pages — Microsoft Corporation, One Microsoft Way, Redmond, WA 98052, Verenigde Staten.<br>
+      <a href="https://pages.github.com" target="_blank" rel="noopener">pages.github.com</a></span>
+    </p>
+    <p>
+      <span class="fr"><strong>Domaine & email :</strong> one.com A/S, Kalvebod Brygge 24, 1560 Copenhague V, Danemark.<br>
+      <a href="https://www.one.com" target="_blank" rel="noopener">one.com</a></span>
+      <span class="nl"><strong>Domein & e-mail:</strong> one.com A/S, Kalvebod Brygge 24, 1560 Kopenhagen V, Denemarken.<br>
+      <a href="https://www.one.com" target="_blank" rel="noopener">one.com</a></span>
+    </p>
+    <p>
+      <span class="fr"><strong>Formulaires de contact :</strong> Formspree, Inc., 340 S Lemon Ave #1919, Walnut, CA 91789, États-Unis.<br>
+      <a href="https://formspree.io" target="_blank" rel="noopener">formspree.io</a></span>
+      <span class="nl"><strong>Contactformulieren:</strong> Formspree, Inc., 340 S Lemon Ave #1919, Walnut, CA 91789, Verenigde Staten.<br>
+      <a href="https://formspree.io" target="_blank" rel="noopener">formspree.io</a></span>
+    </p>
+  </div>
+
+  <div class="legal-divider"></div>
+
+  <!-- ─── 3. POLITIQUE DE CONFIDENTIALITÉ ─── -->
+  <div class="legal-section">
+    <h2>
+      <span class="fr">3. Politique de confidentialité</span>
+      <span class="nl">3. Privacybeleid</span>
+    </h2>
+
+    <span class="legal-tag fr">Conformité RGPD</span>
+    <span class="legal-tag nl">AVG-conformiteit</span>
+
+    <p>
+      <span class="fr"><strong>Données collectées</strong></span>
+      <span class="nl"><strong>Verzamelde gegevens</strong></span>
+    </p>
+    <p>
+      <span class="fr">Ce site ne collecte aucune donnée personnelle à des fins de tracking ou de publicité. Les seules données transmises sont celles que vous saisissez volontairement dans les formulaires de contact (booking, collaboration) : nom, email, message. Ces données sont transmises par Formspree directement à <a href="mailto:booking@djvizion.be">booking@djvizion.be</a> et ne sont pas stockées par le site.</span>
+      <span class="nl">Deze website verzamelt geen persoonsgegevens voor tracking- of reclamedoeleinden. De enige verzamelde gegevens zijn die welke u vrijwillig invult in de contactformulieren (booking, samenwerking): naam, e-mail, bericht. Deze gegevens worden door Formspree rechtstreeks doorgestuurd naar <a href="mailto:booking@djvizion.be">booking@djvizion.be</a> en worden niet door de website opgeslagen.</span>
+    </p>
+
+    <p>
+      <span class="fr"><strong>Cookies et stockage local</strong></span>
+      <span class="nl"><strong>Cookies en lokale opslag</strong></span>
+    </p>
+    <p>
+      <span class="fr">Ce site n'utilise aucun cookie tiers, aucun pixel de tracking, aucune régies publicitaire. Un seul élément de stockage local (localStorage) est utilisé : la mémorisation de la langue choisie par l'utilisateur (FR/EN/NL). Ce stockage est strictement fonctionnel et ne contient aucune donnée personnelle.</span>
+      <span class="nl">Deze website gebruikt geen cookies van derden, geen trackingpixels en geen reclamenetwerken. Er wordt slechts één lokale opslagitem (localStorage) gebruikt: het onthouden van de door de gebruiker gekozen taal (FR/EN/NL). Deze opslag is strikt functioneel en bevat geen persoonsgegevens.</span>
+    </p>
+
+    <p>
+      <span class="fr"><strong>Droits des utilisateurs</strong></span>
+      <span class="nl"><strong>Rechten van gebruikers</strong></span>
+    </p>
+    <p>
+      <span class="fr">Conformément au RGPD (Règlement UE 2016/679), vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous à <a href="mailto:booking@djvizion.be">booking@djvizion.be</a>.</span>
+      <span class="nl">Overeenkomstig de AVG (EU-verordening 2016/679) heeft u recht op inzage, correctie en verwijdering van uw gegevens. Neem contact op via <a href="mailto:booking@djvizion.be">booking@djvizion.be</a> om deze rechten uit te oefenen.</span>
+    </p>
+  </div>
+
+  <div class="legal-divider"></div>
+
+  <!-- ─── 4. POLITIQUE COOKIES ─── -->
+  <div class="legal-section">
+    <h2>
+      <span class="fr">4. Politique cookies</span>
+      <span class="nl">4. Cookiebeleid</span>
+    </h2>
+    <p>
+      <span class="fr">Ce site utilise uniquement des <strong>cookies fonctionnels</strong>. Aucun cookie de mesure d'audience, de réseaux sociaux ou publicitaires n'est déposé.</span>
+      <span class="nl">Deze website gebruikt uitsluitend <strong>functionele cookies</strong>. Er worden geen analytische, social media- of reclamecookies geplaatst.</span>
+    </p>
+    <ul>
+      <li>
+        <span class="fr"><strong>djvizion-lang</strong> — stockage localStorage. Mémorise la langue choisie (fr / en / nl). Durée : persistant jusqu'à effacement manuel. Aucune donnée personnelle.</span>
+        <span class="nl"><strong>djvizion-lang</strong> — localStorage-opslag. Onthoudt de gekozen taal (fr / en / nl). Duur: blijvend tot handmatige verwijdering. Geen persoonsgegevens.</span>
+      </li>
+      <li>
+        <span class="fr"><strong>djvizion-cookie-ok</strong> — stockage localStorage. Mémorise que la bannière cookies a été acceptée. Durée : persistant. Aucune donnée personnelle.</span>
+        <span class="nl"><strong>djvizion-cookie-ok</strong> — localStorage-opslag. Registreert dat de cookiebanner is geaccepteerd. Duur: blijvend. Geen persoonsgegevens.</span>
+      </li>
+    </ul>
+    <p>
+      <span class="fr">Vous pouvez supprimer ces données à tout moment via les paramètres de votre navigateur (Outils → Développeur → Stockage local, ou équivalent).</span>
+      <span class="nl">U kunt deze gegevens te allen tijde verwijderen via de browserinstellingen (Hulpmiddelen → Ontwikkelaar → Lokale opslag, of equivalent).</span>
+    </p>
+  </div>
+
+  <div class="legal-divider"></div>
+
+  <!-- ─── 5. PROPRIÉTÉ INTELLECTUELLE ─── -->
+  <div class="legal-section">
+    <h2>
+      <span class="fr">5. Propriété intellectuelle</span>
+      <span class="nl">5. Intellectuele eigendom</span>
+    </h2>
+    <p>
+      <span class="fr">L'ensemble des contenus présents sur ce site (textes, images, identité visuelle, musiques, vidéos) sont la propriété exclusive d'Isengo ITOTA BOKOKO, sauf mention contraire. Toute reproduction, même partielle, est interdite sans autorisation écrite préalable.</span>
+      <span class="nl">Alle inhoud op deze website (teksten, afbeeldingen, visuele identiteit, muziek, video's) is het exclusieve eigendom van Isengo ITOTA BOKOKO, tenzij anders vermeld. Elke reproductie, zelfs gedeeltelijk, is verboden zonder voorafgaande schriftelijke toestemming.</span>
+    </p>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <img src="images/logo_dj_vizion.webp" alt="DJ VIZION">
+  <span class="footer-copy">© 2026 DJ VIZION</span>
+  <div class="footer-right">
+    <div>
+      <span class="fr">Sound Architect — Belgique</span>
+      <span class="nl">Sound Architect — België</span>
+    </div>
+    <div style="margin-top:.4rem;">
+      <a href="legal.html" class="fr">Mentions légales</a>
+      <a href="legal.html" class="nl">Wettelijke vermeldingen</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── COOKIE BANNER ── -->
+<div id="cookie-banner">
+  <p id="cookie-text"></p>
+  <button id="cookie-ok">OK</button>
+</div>
+
+<script>
+/* ── WhatsApp — numéro encodé en JS pour protection robots ── */
+(function() {
+  var p = [48,48,51,50,52,56,55,56,48,50,53,54,52]; // 0032487802564
+  var num = p.map(function(c){ return String.fromCharCode(c); }).join('');
+  var url = 'https://wa.me/' + num.replace(/^00/,'');
+  var container = document.getElementById('wa-container');
+  if (container) {
+    var a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    // Texte selon la langue active
+    function setWaText() {
+      var lang = localStorage.getItem('djvizion-lang') || 'fr';
+      a.textContent = lang === 'nl' ? 'Contacteer via WhatsApp' : 'Contacter via WhatsApp';
+    }
+    setWaText();
+    a.style.color = '#9660E8';
+    a.style.textDecoration = 'none';
+    a.style.borderBottom = '1px solid rgba(150,96,232,0.25)';
+    container.appendChild(a);
+    // Mettre à jour le texte si la langue change
+    document.addEventListener('langChanged', setWaText);
+  }
+})();
+
+/* ── Lang switcher — FR/NL uniquement sur cette page ── */
+function setLang(lang) {
+  document.body.className = 'lang-' + lang;
+  localStorage.setItem('djvizion-lang', lang);
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(function(b){ b.classList.toggle('active', b.textContent.toLowerCase() === lang); });
+  document.dispatchEvent(new Event('langChanged'));
+}
+
+var saved = localStorage.getItem('djvizion-lang');
+// Sur cette page, on ne supporte que FR et NL
+if (saved === 'en') saved = 'fr';
+if (saved) {
+  document.body.className = 'lang-' + saved;
+  document.querySelectorAll('.lang-switch button, .mobile-lang button')
+    .forEach(function(b){ b.classList.toggle('active', b.textContent.toLowerCase() === saved); });
+}
+
+/* ── Hamburger menu ── */
+var menu = document.getElementById('mobileMenu');
+var burger = document.getElementById('hamburger');
+function toggleMenu() {
+  var open = menu.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMenu() {
+  menu.classList.remove('open');
+  burger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Cookie banner ── */
+var banner = document.getElementById('cookie-banner');
+var cookieText = document.getElementById('cookie-text');
+var cookieOk = document.getElementById('cookie-ok');
+
+var cookieMessages = {
+  fr: 'Ce site utilise uniquement des cookies fonctionnels (mémorisation de la langue). Aucun tracking.',
+  en: 'This site only uses functional cookies (language preference). No tracking.',
+  nl: 'Deze site gebruikt alleen functionele cookies (taalvoorkeur). Geen tracking.'
+};
+
+function updateBannerText() {
+  var lang = localStorage.getItem('djvizion-lang') || 'fr';
+  if (lang === 'en') lang = 'fr'; // fallback sur cette page
+  cookieText.textContent = cookieMessages[lang] || cookieMessages.fr;
+}
+
+if (!localStorage.getItem('djvizion-cookie-ok')) {
+  updateBannerText();
+  setTimeout(function(){ banner.classList.add('visible'); }, 800);
+}
+
+cookieOk.addEventListener('click', function() {
+  localStorage.setItem('djvizion-cookie-ok', '1');
+  banner.classList.remove('visible');
+});
+
+document.addEventListener('langChanged', updateBannerText);
+</script>
+</body>
+</html>
